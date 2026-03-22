@@ -14,3 +14,4 @@ jobs:
           api_token: ${{ secrets.NEOCITIES_API_TOKEN }}
           cleanup: true
           neocities_supporter: false
+          dist_dir: .
