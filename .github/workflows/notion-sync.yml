@@ -1,0 +1,32 @@
+name: Sync from Notion
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1,15 * *'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm install @notionhq/client
+        working-directory: scripts
+
+      - run: node scripts/notion-sync.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+
+      - name: Commit changes
+        run: |
+          git config user.name "notion-sync"
+          git config user.email "actions@github.com"
+          git add blog/
+          git diff --cached --quiet || git commit -m "sync posts from notion"
+          git push

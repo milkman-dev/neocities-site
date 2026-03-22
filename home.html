@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Milk Space</title>
+  <link rel="icon" href="./res/img/milkmandev-avatar.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div id="layout">
+    <main id="content">
+
+      <aside>
+        <div class="box">
+          <div class="box-title">Relax</div>
+          <div class="content-wrapper">
+            <img class="pixelated rounded-s" style="cursor:pointer" src="./res/img/koi.gif" width="180" alt="Koi fish"
+              onclick="openKoi()" />
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-title">Links</div>
+          <div class="content-wrapper">
+            <ul class="nav-list">
+              <li><a href="https://github.com/milkman-dev" target="_blank">GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <div>
+        <div class="box">
+          <div class="box-title">Welcome!</div>
+          <div class="content-wrapper">
+            <p style="text-align:center;margin-bottom:var(--m)">Nice to meet you</p>
+            <p style="margin-bottom:var(--m)">My name is milk, I'm a lifelong learner with a passion for building things
+              from scratch and
+              solving problems. I enjoy a minimal and simple lifestyle, always striving to refine my discipline and
+              improve a bit every day.</p>
+            <p style="margin-bottom:var(--s)">I'm a:</p>
+            <ul class="roles">
+              <li>Project Manager</li>
+              <li>Back-end Developer</li>
+              <li>Game Developer</li>
+              <li>Rock Climber</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="box">
+          <div class="box-title">Explore!</div>
+          <nav>
+            <a href="./home.html" class="nav-button">Home</a>
+            <a href="blog/blog-home.html" class="nav-button">Milk Archives</a>
+          </nav>
+        </div>
+        <div class="box">
+          <div class="content-wrapper">
+            <img src="./res/img/little-boi-side.gif" alt="little boi" class="pixelated rounded-s" />
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-title">I wanna add the squares here</div>
+          <div class="content-wrapper">
+            <p style="color:var(--text-muted);font-style:italic;font-size:11px;text-align:center">
+          </div>
+        </div>
+      </aside>
+
+    </main>
+    <footer>milkman ©2025 — made with ❤️ on neocities</footer>
+  </div>
+
+  <div id="koi-overlay" onclick="closeKoi()">
+    <img src="./res/img/koi-full.gif" alt="Koi" class="pixelated" onclick="event.stopPropagation()" />
+    <audio id="koi-audio" src="./res/img/Moseni_fog.ogg" loop></audio>
+  </div>
+
+  <script>
+    function openKoi() {
+      document.getElementById('koi-overlay').classList.add('active');
+      document.getElementById('koi-audio').play();
+    }
+    function closeKoi() {
+      document.getElementById('koi-overlay').classList.remove('active');
+      var a = document.getElementById('koi-audio');
+      a.pause(); a.currentTime = 0;
+    }
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeKoi(); });
+  </script>
+</body>
+
+</html>
