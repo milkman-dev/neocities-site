@@ -3,11 +3,12 @@
   --bg: #1A202C; --box-bg: rgba(26,34,50,0.72);
   --text: #E2E8F0; --text-muted: #718096;
   --link: #FFE5B4; --nav-bg: #2D3748; --accent: #CBD5E0;
+  --pastel: #BDB9FF;
   --t: 0.3s ease;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'DM Sans', sans-serif; font-size: 13px; line-height: 1.6;
+  font-family: 'Nunito', sans-serif; font-size: 15px; line-height: 1.6;
   color: var(--text);
   background: var(--bg) url('../res/img/cloud-dark.png') center/cover fixed;
 }
@@ -25,18 +26,22 @@ a:hover { opacity: 0.8; }
   border: 1px solid rgba(255,255,255,0.06);
 }
 .box-title {
-  background: rgba(45,55,72,0.95); color: var(--text);
+  color: var(--pastel); background: rgba(45,55,72,0.5);
   border-radius: var(--s); padding: var(--xs) var(--s);
-  margin-bottom: var(--s); text-align: center; font-weight: 500;
+  margin-bottom: var(--s); font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em; text-transform: lowercase;
 }
+.box-title::before { content: '// '; opacity: 0.5; }
 .content-wrapper { padding: var(--l); }
 .nav-button {
   display: block; background: var(--nav-bg);
   padding: var(--xs) var(--m); margin-bottom: var(--xs);
   border-radius: var(--s); font-weight: 500; text-align: center; transition: var(--t);
+  font-size: 13px;
 }
+ul.nav-list { font-size: 13px; }
 .nav-button:hover { opacity: 0.9; transform: translateX(2px); }
-footer { text-align: center; padding: var(--l); margin-top: var(--xl); color: var(--text-muted); }
 
 /* ── Enter page ─────────────────────────────── */
 body.splash { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
@@ -97,7 +102,7 @@ ul.roles li::before { content: "▸"; }
 .archive-post-item:last-child { border-bottom: none; }
 .archive-post-date { color: var(--text-muted); font-size: 11px; white-space: nowrap; flex-shrink: 0; }
 .post-meta { color: var(--text-muted); font-size: 11px; margin-bottom: var(--l); }
-.post-body { font-family: 'Inconsolata', monospace; font-size: 13px; line-height: 1.9; }
+.post-body { font-family: 'Roboto Mono', monospace; font-size: 15px; line-height: 1.9; }
 .post-body p { margin: 0 0 var(--m) 0; }
 .post-back { display: inline-block; margin-top: var(--l); }
 
