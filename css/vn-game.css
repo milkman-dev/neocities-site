@@ -1,0 +1,173 @@
+@font-face {
+  font-family: 'MinecraftFont';
+  src: url("../res/font/mac's Tweaked Minecraft.woff2") format('woff2');
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #1A202C;
+  --box-bg: rgba(26,32,44,0.95);
+  --text: #E2E8F0;
+  --text-muted: #718096;
+  --link: #FFE5B4;
+  --nav-bg: #2D3748;
+  --accent: #CBD5E0;
+}
+
+body {
+  font-family: 'MinecraftFont', sans-serif;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background: #000;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#scene {
+  /* Fixed 1280×720 canvas — JS scales it to fit any screen */
+  width: 1280px;
+  height: 720px;
+  position: relative;
+  flex-shrink: 0;
+  transform-origin: center center;
+  background: url('../res/img/metro-background.png') center center / cover no-repeat;
+  cursor: pointer;
+}
+
+/* ── Close button ───────────────────────── */
+#close-btn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 20;
+  font-family: 'MinecraftFont', sans-serif;
+  color: #fff;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 6px 14px;
+  background: #000;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 3px #000;
+  cursor: pointer;
+  image-rendering: pixelated;
+  opacity: 0.35;
+  transition: background 0.1s, color 0.1s, opacity 0.1s;
+}
+#close-btn:hover {
+  opacity: 1;
+  background: #fff;
+  color: #000;
+}
+
+/* ── Portrait ───────────────────────────── */
+#portrait {
+  position: absolute;
+  left: 60px;
+  bottom: 0;
+  height: 760px;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Dialogue area ──────────────────────── */
+#dialogue-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 32px 28px;
+  z-index: 2;
+}
+
+/* Speaker name colors */
+#nameplate[data-speaker="milk"]     { color: #FFB7C5; } /* pastel pink */
+#nameplate[data-speaker="you"]      { color: #B5EAD7; } /* mint green */
+#nameplate[data-speaker="narrator"] { color: #C3B1E1; } /* soft lavender */
+
+/* OMORI-style nameplate */
+#nameplate {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  font-family: 'MinecraftFont', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border: 2px solid #fff;
+  border-bottom: none;
+  image-rendering: pixelated;
+  position: relative;
+  z-index: 1;
+}
+
+/* OMORI-style dialogue box */
+#dialogue-box {
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  image-rendering: pixelated;
+  padding: 28px 40px 26px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#dialogue-text {
+  font-family: 'MinecraftFont', sans-serif;
+  font-size: 22px;
+  line-height: 2.0;
+  min-height: 90px;
+  color: #fff;
+  white-space: pre-wrap;
+}
+
+#dialogue-text:empty { min-height: 0; }
+#dialogue-text.italic { font-style: italic; }
+
+/* blinking cursor while typing */
+#dialogue-text.typing::after {
+  content: '▪';
+  color: #fff;
+  animation: blink 0.7s step-end infinite;
+}
+
+/* down arrow when done, no options */
+#dialogue-text.advance::after {
+  content: ' ■';
+  color: #fff;
+  font-size: 13px;
+  vertical-align: middle;
+  animation: blink 0.7s step-end infinite;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ── Options ────────────────────────────── */
+#options {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#options.hidden { display: none; }
+
+.option-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: 'MinecraftFont', sans-serif;
+  font-size: 20px;
+  cursor: pointer;
+  text-align: left;
+  padding: 4px 10px;
+  transition: color 0.1s;
+}
+.option-btn::before { content: '□  '; }
+.option-btn:hover { color: #aaa; }
+.option-btn:hover::before { content: '■  '; }

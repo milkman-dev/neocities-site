@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Know Milk</title>
+  <link rel="icon" href="./res/img/milkmandev-avatar.ico" />
+  <link rel="stylesheet" href="./css/vn-game.css">
+</head>
+
+<body>
+  <div id="scene">
+    <a id="close-btn" href="./home.html">EXIT</a>
+    <img id="portrait" src="./res/img/milk-sona.png.png" alt="Milk" />
+    <div id="dialogue-area">
+      <div id="nameplate">???</div>
+      <div id="dialogue-box">
+        <div id="dialogue-text"></div>
+        <div id="options" class="hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bgm" src="./res/ogg/2love.ogg" loop></audio>
+
+  <script>
+    const scenes = [
+      {
+        speaker: "...",
+        text: "There is someone else on the platform"
+      },
+
+      // 1
+      {
+        speaker: "Milk",
+        text: "Hi, are you waiting for the train too?",
+        options: [
+          { text: "Yeah, for a bit now", next: 2 },
+          { text: "No", next: 11 }
+        ]
+      },
+
+      // PATH A (choice A from scene 1)
+      // 2
+      {
+        speaker: "Milk",
+        text: "Cool, it will take a while though, last train of the night"
+      },
+
+      // 2
+      {
+        speaker: "Milk",
+        text: "They really do not rush it, which honestly is fine, good time to decompress"
+      },
+
+      // 4
+      {
+        speaker: "Milk",
+        text: "You been in Tokyo long?",
+        options: [
+          { text: "A while", next: 5 },
+          { text: "Just arrived", next: 9 }
+        ]
+      },
+
+      // PATH A1 (choice A from scene 4)
+      // 5
+      {
+        speaker: "Milk",
+        text: "Tokyo is the perfect city for that"
+      },
+
+      // 6
+      {
+        speaker: "Milk",
+        text: "Should not work, a city this size, but somehow it does"
+      },
+
+      // 6
+      {
+        speaker: "Milk",
+        text: "I've been trying to figure out why and I still do not have a good answer"
+      },
+
+      // 7
+      {
+        speaker: "Milk",
+        text: "I'm Milk, by the way",
+        next: 18
+      },
+
+      // PATH A2 (choice B from scene 4)
+      // 8
+      {
+        speaker: "Milk",
+        text: "First days here are something else, everything is slightly unreal in a good way"
+      },
+
+      // 9
+      {
+        speaker: "Milk",
+        text: "I'm Milk",
+        next: 18
+      },
+
+      // PATH B (choice B from scene 1)
+      // 10
+      {
+        speaker: "...",
+        text: "He blinks, then laughs, genuine, like he had no time to prepare"
+      },
+
+      // 11
+      {
+        speaker: "Milk",
+        text: "Okay that is fair, that was a really stupid question"
+      },
+
+      // 12
+      {
+        speaker: "Milk",
+        text: "In my defense it is almost one in the morning and I've been awake since six"
+      },
+
+      // 12
+      {
+        speaker: "Milk",
+        text: "My brain stopped forming good questions around nine"
+      },
+
+      // 13
+      {
+        speaker: "Milk",
+        text: "Train is going to take a while anyway, last one of the night"
+      },
+
+      // 13
+      {
+        speaker: "Milk",
+        text: "They know nobody is running for it"
+      },
+
+      // 14
+      {
+        speaker: "Milk",
+        text: "I'm Milk, by the way",
+        next: 18
+      },
+
+      // 15
+      {
+        speaker: "...",
+        text: "You tell him your name, he repeats it once, making sure he has it right",
+        options: [
+          { text: "Your name is freaking Milk?", next: 19 },
+          { text: "How old are you?", next: 70 },
+          { text: "You're not from Japan, are you?", next: 92 },
+          { text: "What are you doing in Tokyo?", next: 124 }
+        ]
+      },
+
+      // PATH 2A — Milk / nickname (choice A from scene 16)
+      // 17
+      {
+        speaker: "Milk",
+        text: "Online name, started as a username when I was a teenager and just followed me everywhere"
+      },
+
+      // 17
+      {
+        speaker: "Milk",
+        text: "Every game, every forum, every corner of the internet I ever passed through"
+      },
+
+      // 17
+      {
+        speaker: "Milk",
+        text: "At some point introducing myself as Milk was just easier than whatever my actual name is"
+      },
+
+      // 18
+      {
+        speaker: "You",
+        text: "You forgot your own name?"
+      },
+
+      // 19
+      {
+        speaker: "Milk",
+        text: "It is in there somewhere, buried under like fifteen years of being chronically online",
+        options: [
+          { text: "Nine to nine?", next: 24 },
+          { text: "Sounds like it just followed you", next: 62 }
+        ]
+      },
+
+      // PATH 2A-A1 — Big into the internet (choice A from scene 19)
+      // 20
+      {
+        speaker: "Milk",
+        text: "Nine to nine, and I mean that as a job description"
+      },
+
+      // 20
+      {
+        speaker: "Milk",
+        text: "There were years where the internet was basically my whole world"
+      },
+
+      // 21
+      {
+        speaker: "Milk",
+        text: "Back then it was genuinely different, you would open a browser and just find things, weird things"
+      },
+
+      // 21
+      {
+        speaker: "Milk",
+        text: "A site where some guy explained how to build a machine, a page where a kid uploaded a flash animation he made over a weekend"
+      },
+
+      // 21
+      {
+        speaker: "Milk",
+        text: "Forums about incredibly niche topics just because people cared"
+      },
+
+      // 21
+      {
+        speaker: "Milk",
+        text: "It felt like wandering streets that did not exist on any map"
+      },
+
+      // 22
+      {
+        speaker: "You",
+        text: "That actually sounds kind of great"
+      },
+
+      // 23
+      {
+        speaker: "Milk",
+        text: "It was, I had this toy called Knex, plastic rods and connectors"
+      },
+
+      // 23
+      {
+        speaker: "Milk",
+        text: "Found this site called Instructables, entirely in English, teaching you how to make roller coasters, little machines"
+      },
+
+      // 23
+      {
+        speaker: "Milk",
+        text: "A crossbow that launched pencils, completely useless things, I loved every single one of them"
+      },
+
+      // 24
+      {
+        speaker: "You",
+        text: "Is that how you learned English?"
+      },
+
+      // 25
+      {
+        speaker: "Milk",
+        text: "Partly, my mom put me in classes when I was little, but I finished learning from video games"
+      },
+
+      // 25
+      {
+        speaker: "Milk",
+        text: "N64, Gameboy, if you wanted to understand what was happening you had to actually read"
+      },
+
+      // 25
+      {
+        speaker: "Milk",
+        text: "Best English teachers I ever had were Japanese game developers",
+        options: [
+          { text: "What happened to that internet?", next: 38 },
+          { text: "What else did you get into?", next: 50 }
+        ]
+      },
+
+      // PATH 2A-A1a — What happened to that internet (choice A from scene 26)
+      // 31
+      {
+        speaker: "Milk",
+        text: "Social media ate it"
+      },
+
+      // 32
+      {
+        speaker: "Milk",
+        text: "Everything got pulled into the same five places, same feeds, same formats"
+      },
+
+      // 32
+      {
+        speaker: "Milk",
+        text: "The weird little sites and personal pages and niche forums did not disappear exactly, they just got quiet"
+      },
+
+      // 32
+      {
+        speaker: "Milk",
+        text: "The internet used to feel like exploring, now it mostly feels like standing in a very loud mall"
+      },
+
+      // 33
+      {
+        speaker: "You",
+        text: "Do you still look for them?"
+      },
+
+      // 34
+      {
+        speaker: "Milk",
+        text: "Found something called Neocities a while back, people building actual personal websites again"
+      },
+
+      // 34
+      {
+        speaker: "Milk",
+        text: "Guestbooks and art pages and little corners dedicated to very specific obsessions"
+      },
+
+      // 34
+      {
+        speaker: "Milk",
+        text: "Same feeling as before, like stumbling onto something that was not made for everyone"
+      },
+
+      // 34
+      {
+        speaker: "Milk",
+        text: "I have a small page there, nothing impressive, but it is mine"
+      },
+
+      // 35
+      {
+        speaker: "You",
+        text: "What is on it?"
+      },
+
+      // 36
+      {
+        speaker: "Milk",
+        text: "Bad color scheme and too many links to things nobody asked for"
+      },
+
+      // 36
+      {
+        speaker: "Milk",
+        text: "It is kind of my whole personality in webpage form",
+        next: 146
+      },
+
+      // PATH 2A-A1b — What else did you get into (choice B from scene 26)
+      // 37
+      {
+        speaker: "Milk",
+        text: "Programming, kind of, first time I touched anything close to it I was in elementary school"
+      },
+
+      // 37
+      {
+        speaker: "Milk",
+        text: "My teacher let me make something in Scratch to pass a class I was failing"
+      },
+
+      // 38
+      {
+        speaker: "You",
+        text: "What is Scratch?"
+      },
+
+      // 39
+      {
+        speaker: "Milk",
+        text: "Visual programming for kids, you stack blocks together, I made three little animations"
+      },
+
+      // 39
+      {
+        speaker: "Milk",
+        text: "Something about telling a machine to do something and watching it do exactly that just clicked"
+      },
+
+      // 39
+      {
+        speaker: "Milk",
+        text: "Exciting in a way I could not explain then, still cannot"
+      },
+
+      // 40
+      {
+        speaker: "Milk",
+        text: "Found HTML in high school, then lost it for a while, then found it again from inside a software company"
+      },
+
+      // 40
+      {
+        speaker: "Milk",
+        text: "Saw what the developers were doing upstairs and thought: that is what I actually want to be doing"
+      },
+
+      // 41
+      {
+        speaker: "You",
+        text: "And are you?"
+      },
+
+      // 42
+      {
+        speaker: "Milk",
+        text: "Getting there, took some detours, my boss at the time told me to stop learning to code"
+      },
+
+      // 42
+      {
+        speaker: "Milk",
+        text: "I listened for a while, which I regret, eventually said forget it and kept going anyway"
+      },
+
+      // 42
+      {
+        speaker: "Milk",
+        text: "The detours are annoying but I keep ending up pointed in the same direction",
+        next: 146
+      },
+
+      // PATH 2A-A2 — A username can follow you (choice B from scene 19)
+      // 43
+      {
+        speaker: "Milk",
+        text: "Yeah, and I stopped fighting it years ago, Milk is just who I am online at this point"
+      },
+
+      // 43
+      {
+        speaker: "Milk",
+        text: "Every gamertag, every handle, every forum I've ever lurked in"
+      },
+
+      // 44
+      {
+        speaker: "You",
+        text: "You lurk a lot?"
+      },
+
+      // 45
+      {
+        speaker: "Milk",
+        text: "Professionally, I find a space, watch it for a while, occasionally drop something in, then disappear"
+      },
+
+      // 45
+      {
+        speaker: "Milk",
+        text: "No consistent presence, no community building, pure ghost behavior"
+      },
+
+      // 45
+      {
+        speaker: "Milk",
+        text: "Groups feel like performance and I already perform enough during the day"
+      },
+
+      // 46
+      {
+        speaker: "You",
+        text: "That is oddly self-aware"
+      },
+
+      // 47
+      {
+        speaker: "Milk",
+        text: "I've had a lot of late nights to think about it",
+        next: 146
+      },
+
+      // PATH 2B — How old are you (choice B from scene 16)
+      // 47
+      {
+        speaker: "Milk",
+        text: "Twenty-nine, almost thirty, July first"
+      },
+
+      // 48
+      {
+        speaker: "You",
+        text: "Does that feel weird?"
+      },
+
+      // 49
+      {
+        speaker: "Milk",
+        text: "A little, mostly I just keep doing the math and going, huh, okay, and then moving on"
+      },
+
+      // 49
+      {
+        speaker: "Milk",
+        text: "I've taken kind of a long and crooked road to get here"
+      },
+
+      // 49
+      {
+        speaker: "Milk",
+        text: "So thirty feels less like a deadline and more like, alright, finally catching up to myself",
+        options: [
+          { text: "Long and crooked how?", next: 75 },
+          { text: "Catching up to yourself?", next: 85 }
+        ]
+      },
+
+      // PATH 2B-A — Long and crooked how (choice A from scene 50)
+      // 51
+      {
+        speaker: "Milk",
+        text: "Construction, cleaning, bike shop counter, sales degree, software company"
+      },
+
+      // 51
+      {
+        speaker: "Milk",
+        text: "A brief window where I was actually writing code for a living, then back to business"
+      },
+
+      // 51
+      {
+        speaker: "Milk",
+        text: "Someone promised a promotion that never came, it is a weird resume, I'll give it that"
+      },
+
+      // 52
+      {
+        speaker: "You",
+        text: "How did you end up at a software company coming from a bike shop?"
+      },
+
+      // 53
+      {
+        speaker: "Milk",
+        text: "Turns out being good at talking to people is a transferable skill"
+      },
+
+      // 53
+      {
+        speaker: "Milk",
+        text: "I walked in, made a decent impression, and they hired me for sales"
+      },
+
+      // 53
+      {
+        speaker: "Milk",
+        text: "Then I spent the next while staring at the developers upstairs thinking: that is what I actually want to be doing"
+      },
+
+      // 54
+      {
+        speaker: "You",
+        text: "So you taught yourself?"
+      },
+
+      // 55
+      {
+        speaker: "Milk",
+        text: "At night, on my own, same way I've learned everything I actually care about"
+      },
+
+      // 55
+      {
+        speaker: "Milk",
+        text: "Not formally, just by wanting something badly enough that I absorbed it",
+        next: 146
+      },
+
+      // PATH 2B-B — Catching up to yourself (choice B from scene 50)
+      // 55
+      {
+        speaker: "Milk",
+        text: "I spent a lot of years being interested in things and not doing them"
+      },
+
+      // 55
+      {
+        speaker: "Milk",
+        text: "Programming, cycling further, building stuff, I would orbit the thing without committing to it"
+      },
+
+      // 56
+      {
+        speaker: "Milk",
+        text: "At some point I just started doing them instead of thinking about doing them"
+      },
+
+      // 56
+      {
+        speaker: "Milk",
+        text: "Turns out that works better"
+      },
+
+      // 57
+      {
+        speaker: "You",
+        text: "What finally made you switch?"
+      },
+
+      // 58
+      {
+        speaker: "Milk",
+        text: "I just got tired of being the person watching from the window"
+      },
+
+      // 58
+      {
+        speaker: "Milk",
+        text: "At some point you either go outside or you admit that you are not going to",
+        next: 146
+      },
+
+      // PATH 2C — You are not from Japan, are you (choice C from scene 16)
+      // 60
+      {
+        speaker: "Milk",
+        text: "That obvious?"
+      },
+
+      // 61
+      {
+        speaker: "You",
+        text: "Little bit"
+      },
+
+      // 62
+      {
+        speaker: "Milk",
+        text: "Mexico City, born and raised, first time abroad actually"
+      },
+
+      // 63
+      {
+        speaker: "You",
+        text: "And you came to Tokyo first?"
+      },
+
+      // 64
+      {
+        speaker: "Milk",
+        text: "I kept saying I would come here someday, then the gap between saying and doing felt embarrassing"
+      },
+
+      // 64
+      {
+        speaker: "Milk",
+        text: "So I just bought the ticket, seemed like the right place to do a first trip"
+      },
+
+      // 65
+      {
+        speaker: "You",
+        text: "How has it been?"
+      },
+
+      // 66
+      {
+        speaker: "Milk",
+        text: "Strange and right at the same time"
+      },
+
+      // 66
+      {
+        speaker: "Milk",
+        text: "Mexico City is loud and warm and everyone is in your business whether you want it or not"
+      },
+
+      // 66
+      {
+        speaker: "Milk",
+        text: "Tokyo is quiet and precise and everyone agrees, by some unspoken contract, to leave each other alone"
+      },
+
+      // 66
+      {
+        speaker: "Milk",
+        text: "I thought that would feel cold, it does not, it feels like a different kind of consideration"
+      },
+
+      // 67
+      {
+        speaker: "Milk",
+        text: "First day I got here I watched two strangers bow to each other after one helped the other with directions"
+      },
+
+      // 67
+      {
+        speaker: "Milk",
+        text: "Neither of them smiled, just precise, respect in its exact shape with nothing extra"
+      },
+
+      // 67
+      {
+        speaker: "Milk",
+        text: "I found that beautiful"
+      },
+
+      // 68
+      {
+        speaker: "You",
+        text: "You have been paying attention"
+      },
+
+      // 69
+      {
+        speaker: "Milk",
+        text: "I walk a lot when I travel, no plan, just pick a direction and follow it"
+      },
+
+      // 69
+      {
+        speaker: "Milk",
+        text: "You notice things when you are not trying to see anything specific",
+        options: [
+          { text: "Best thing you've seen?", next: 109 },
+          { text: "You prefer to keep moving?", next: 116 }
+        ]
+      },
+
+      // PATH 2C-A — Best thing you have seen (choice A from scene 70)
+      // 71
+      {
+        speaker: "Milk",
+        text: "There is a vending machine near Shimokitazawa that sells canned drinks and also, a single umbrella"
+      },
+
+      // 71
+      {
+        speaker: "Milk",
+        text: "Just one umbrella, sitting there, no context, I stood in front of it for five minutes"
+      },
+
+      // 71
+      {
+        speaker: "Milk",
+        text: "Eventually gave up and bought a coffee instead"
+      },
+
+      // 72
+      {
+        speaker: "You",
+        text: "That is the best thing?"
+      },
+
+      // 73
+      {
+        speaker: "Milk",
+        text: "The unexplained stuff is always the best stuff"
+      },
+
+      // 73
+      {
+        speaker: "Milk",
+        text: "I've been like that since I was a kid finding weird pages on the early internet with no context and no explanation"
+      },
+
+      // 73
+      {
+        speaker: "Milk",
+        text: "Some things you just let be what they are",
+        next: 146
+      },
+
+      // PATH 2C-B — Why moving (choice B from scene 70)
+      // 76
+      {
+        speaker: "Milk",
+        text: "I cycle everywhere back home, got into it at sixteen"
+      },
+
+      // 76
+      {
+        speaker: "Milk",
+        text: "There is something about it, the feeling of actually moving when everything else feels stuck"
+      },
+
+      // 77
+      {
+        speaker: "Milk",
+        text: "Tokyo for the same reason, I wanted somewhere that required me to figure things out from scratch"
+      },
+
+      // 77
+      {
+        speaker: "Milk",
+        text: "Street signs that do not make sense, navigating by instinct, same feeling as cycling in a city you do not know"
+      },
+
+      // 78
+      {
+        speaker: "You",
+        text: "How did you get into cycling at sixteen?"
+      },
+
+      // 79
+      {
+        speaker: "Milk",
+        text: "Watched some kids on my street riding around for weeks from my window, never went out, just watched"
+      },
+
+      // 79
+      {
+        speaker: "Milk",
+        text: "Then one of them knocked on the door and asked if I wanted to come out"
+      },
+
+      // 79
+      {
+        speaker: "Milk",
+        text: "I went, and that was kind of it, sometimes the only thing stopping you is nobody having knocked yet",
+        next: 146
+      },
+
+      // PATH 2D — What are you doing in Tokyo (choice D from scene 16)
+      // 84
+      {
+        speaker: "Milk",
+        text: "Walking mostly, I pick a direction and follow it until my feet give up"
+      },
+
+      // 84
+      {
+        speaker: "Milk",
+        text: "No tours, no guides, no lists of things you are supposed to see"
+      },
+
+      // 85
+      {
+        speaker: "You",
+        text: "Any good discoveries?"
+      },
+
+      // 86
+      {
+        speaker: "Milk",
+        text: "Found a place yesterday that sold like forty types of curry"
+      },
+
+      // 86
+      {
+        speaker: "Milk",
+        text: "The woman running it explained each one to me in Japanese and I understood maybe thirty percent"
+      },
+
+      // 86
+      {
+        speaker: "Milk",
+        text: "I just kept nodding and pointing and it worked out fine"
+      },
+
+      // 86
+      {
+        speaker: "Milk",
+        text: "Also a vending machine selling a single umbrella, which raised more questions than it answered"
+      },
+
+      // 87
+      {
+        speaker: "You",
+        text: "What does Tokyo feel like at one in the morning?"
+      },
+
+      // 88
+      {
+        speaker: "Milk",
+        text: "Honest, the city stops performing at this hour"
+      },
+
+      // 88
+      {
+        speaker: "Milk",
+        text: "During the day everything has a function and a direction, at night it just is"
+      },
+
+      // 88
+      {
+        speaker: "Milk",
+        text: "I find places more interesting when they are not trying to impress anyone"
+      },
+
+      // 88
+      {
+        speaker: "Milk",
+        text: "Also extremely quiet for a city this size, Mexico City at one in the morning is a very different experience",
+        options: [
+          { text: "Mexico City at night?", next: 136 },
+          { text: "First time abroad?", next: 141 }
+        ]
+      },
+
+      // PATH 2D-A — Mexico City at night (choice A from scene 89)
+      // 90
+      {
+        speaker: "Milk",
+        text: "Loud, someone is always doing something, there is always a taco stand open somewhere"
+      },
+
+      // 90
+      {
+        speaker: "Milk",
+        text: "Someone's uncle is playing music at a volume that suggests he does not know what neighbors are"
+      },
+
+      // 90
+      {
+        speaker: "Milk",
+        text: "I love it but it is a lot, Tokyo feels like turning the volume down for a couple of weeks"
+      },
+
+      // 91
+      {
+        speaker: "You",
+        text: "You miss it?"
+      },
+
+      // 92
+      {
+        speaker: "Milk",
+        text: "Already, a little, but that is usually a good sign, means it is worth going back to",
+        next: 146
+      },
+
+      // PATH 2D-B — First time abroad (choice B from scene 89)
+      // 92
+      {
+        speaker: "Milk",
+        text: "Yeah, which is either impressive or embarrassing depending on how you look at it"
+      },
+
+      // 93
+      {
+        speaker: "You",
+        text: "Why Tokyo for the first one?"
+      },
+
+      // 94
+      {
+        speaker: "Milk",
+        text: "I kept saying I would come here someday and then I got tired of saying it"
+      },
+
+      // 94
+      {
+        speaker: "Milk",
+        text: "Bought the ticket before I could talk myself out of it"
+      },
+
+      // 94
+      {
+        speaker: "Milk",
+        text: "I've spent enough time orbiting the things I want to do, at some point you just go",
+        next: 146
+      },
+
+      // 91
+      {
+        speaker: "...",
+        text: "Enough time has passed, the awkwardness of two strangers is mostly gone"
+      },
+
+      // 92
+      {
+        speaker: "Milk",
+        text: "You know what is strange about this city at night"
+      },
+
+      // 92
+      {
+        speaker: "Milk",
+        text: "Everyone seems to be in their own world completely, just each person doing their thing"
+      },
+
+      // 92
+      {
+        speaker: "Milk",
+        text: "Without making it anyone else's problem"
+      },
+
+      // 93
+      {
+        speaker: "You",
+        text: "Is that different from home?"
+      },
+
+      // 94
+      {
+        speaker: "Milk",
+        text: "Back home if you are sitting alone somewhere for too long someone is going to ask if you are okay"
+      },
+
+      // 94
+      {
+        speaker: "Milk",
+        text: "Here nobody thinks anything of it, I find it kind of refreshing honestly"
+      },
+
+      // 94
+      {
+        speaker: "Milk",
+        text: "There is a word here, kodawari, like a stubborn attachment to doing things your own specific way"
+      },
+
+      // 94
+      {
+        speaker: "Milk",
+        text: "I think the whole city runs on that",
+        options: [
+          { text: "You seem like someone who lives like that", next: 155 },
+          { text: "What do you do when not wandering?", next: 164 },
+          { text: "What are you actually into?", next: 173 }
+        ]
+      },
+
+      // PATH 3A — You seem like someone who lives like that (choice A from scene 95)
+      // 96
+      {
+        speaker: "Milk",
+        text: "Probably, I've always learned things by going sideways into them rather than through the front door"
+      },
+
+      // 96
+      {
+        speaker: "Milk",
+        text: "I pick something up, absorb it completely, disappear into it for a while, come out the other side knowing it"
+      },
+
+      // 97
+      {
+        speaker: "You",
+        text: "Like what?"
+      },
+
+      // 98
+      {
+        speaker: "Milk",
+        text: "Programming, cycling, English from video games"
+      },
+
+      // 98
+      {
+        speaker: "Milk",
+        text: "The entire history of flash games that no longer exist"
+      },
+
+      // 98
+      {
+        speaker: "Milk",
+        text: "How to build a crossbow out of Knex that launches pencils"
+      },
+
+      // 99
+      {
+        speaker: "You",
+        text: "That last one seems specific"
+      },
+
+      // 100
+      {
+        speaker: "Milk",
+        text: "There was a website called Instructables, I was maybe ten, it changed my life"
+      },
+
+      // 100
+      {
+        speaker: "Milk",
+        text: "I have no regrets",
+        next: 183
+      },
+
+      // PATH 3B — What do you do when not wandering (choice B from scene 95)
+      // 100
+      {
+        speaker: "Milk",
+        text: "I work in software, business side, though I've been slowly working my way toward the technical side"
+      },
+
+      // 101
+      {
+        speaker: "You",
+        text: "What does slowly working your way toward mean?"
+      },
+
+      // 102
+      {
+        speaker: "Milk",
+        text: "Teaching myself to code at night, on my own, same way I've learned most things I actually care about"
+      },
+
+      // 102
+      {
+        speaker: "Milk",
+        text: "My boss once told me to stop and focus on sales instead, I listened for a while, which I regret"
+      },
+
+      // 102
+      {
+        speaker: "Milk",
+        text: "Eventually said forget it and kept going, I think I've spent enough time in the wrong room"
+      },
+
+      // 103
+      {
+        speaker: "You",
+        text: "The wrong room?"
+      },
+
+      // 104
+      {
+        speaker: "Milk",
+        text: "Story of my education, asked for digital systems, got industrial machinery"
+      },
+
+      // 104
+      {
+        speaker: "Milk",
+        text: "Asked for programming, got welding, wanted art, teacher said no"
+      },
+
+      // 104
+      {
+        speaker: "Milk",
+        text: "At some point you stop asking for permission and just go through the door anyway",
+        next: 183
+      },
+
+      // PATH 3C — What are you actually into (choice C from scene 95)
+      // 106
+      {
+        speaker: "Milk",
+        text: "Quiet atmospheric games, the kind with a lot of walking and not much explaining"
+      },
+
+      // 106
+      {
+        speaker: "Milk",
+        text: "Yume Nikki if you know it, worlds that are strange but safe to move through"
+      },
+
+      // 107
+      {
+        speaker: "You",
+        text: "I know it"
+      },
+
+      // 108
+      {
+        speaker: "Milk",
+        text: "Then you get it, I do not want to master something or compete, I want to inhabit a space for a while and then leave"
+      },
+
+      // 108
+      {
+        speaker: "Milk",
+        text: "Also the early internet, cycling, programming, building things that have no practical use, the usual"
+      },
+
+      // 109
+      {
+        speaker: "You",
+        text: "The early internet?"
+      },
+
+      // 110
+      {
+        speaker: "Milk",
+        text: "Before everything got pulled into the same five platforms"
+      },
+
+      // 110
+      {
+        speaker: "Milk",
+        text: "There was this whole world of weird personal pages and niche forums that existed just because someone cared enough to make them"
+      },
+
+      // 110
+      {
+        speaker: "Milk",
+        text: "I've been building a small page trying to bring that energy back, bad color scheme, too many links to things nobody asked for"
+      },
+
+      // 110
+      {
+        speaker: "Milk",
+        text: "It is a work in progress",
+        next: 183
+      },
+
+      // 105
+      {
+        speaker: "...",
+        text: "The platform is fully quiet now"
+      },
+
+      // 106
+      {
+        speaker: "...",
+        text: "The tunnel ahead is just darkness and the occasional distant sound that might be the train, or might be nothing",
+        options: [
+          { text: "Something you're actually proud of?", next: 185 },
+          { text: "What do you actually want?", next: 199 },
+          { text: "Do you believe in anything?", next: 210 }
+        ]
+      },
+
+      // PATH 4A — Something you are actually proud of (choice A from scene 107)
+      // 108
+      {
+        speaker: "Milk",
+        text: "I finished high school twice, essentially"
+      },
+
+      // 108
+      {
+        speaker: "Milk",
+        text: "Dropped out the first time because I needed to leave, went back years later to a night program"
+      },
+
+      // 108
+      {
+        speaker: "Milk",
+        text: "The kind where all your classmates are adults who also had to leave for one reason or another"
+      },
+
+      // 108
+      {
+        speaker: "Milk",
+        text: "Finished with the best grades I had ever gotten, which I found funny"
+      },
+
+      // 109
+      {
+        speaker: "You",
+        text: "Why funny?"
+      },
+
+      // 110
+      {
+        speaker: "Milk",
+        text: "Because I was genuinely good at school when I was there, I liked learning, I caught things fast"
+      },
+
+      // 110
+      {
+        speaker: "Milk",
+        text: "I just kept ending up in the wrong environment at the wrong time"
+      },
+
+      // 110
+      {
+        speaker: "Milk",
+        text: "The night program felt like finally being in the right room, everyone there had taken the long way around"
+      },
+
+      // 110
+      {
+        speaker: "Milk",
+        text: "Nobody thought it was strange"
+      },
+
+      // 111
+      {
+        speaker: "You",
+        text: "Is that where you figured out the code stuff?"
+      },
+
+      // 112
+      {
+        speaker: "Milk",
+        text: "No that was later, from inside a software company, watching the developers upstairs"
+      },
+
+      // 112
+      {
+        speaker: "Milk",
+        text: "Thinking: I could do that, I should be doing that, so I started"
+      },
+
+      // 112
+      {
+        speaker: "Milk",
+        text: "Still going, slowly but consistently, which I think is the part I'm actually proud of"
+      },
+
+      // 112
+      {
+        speaker: "Milk",
+        text: "Not the specific things, just that I kept moving",
+        next: 220
+      },
+
+      // PATH 4B — What do you actually want (choice B from scene 107)
+      // 117
+      {
+        speaker: "Milk",
+        text: "To make something, I've spent a lot of my life working toward other people's goals"
+      },
+
+      // 117
+      {
+        speaker: "Milk",
+        text: "Sales targets, someone else's product, someone else's roadmap"
+      },
+
+      // 118
+      {
+        speaker: "Milk",
+        text: "I want to make something that is just mine, the way those weird internet pages felt mine when I was a kid"
+      },
+
+      // 118
+      {
+        speaker: "Milk",
+        text: "Something that exists because I put it there, not because it has a business reason"
+      },
+
+      // 119
+      {
+        speaker: "You",
+        text: "Like what?"
+      },
+
+      // 120
+      {
+        speaker: "Milk",
+        text: "Still figuring that out, maybe something with code, maybe something that has nothing to do with work at all"
+      },
+
+      // 120
+      {
+        speaker: "Milk",
+        text: "Everything I love I came to through the back door, always the back door, maybe it is time to try the front"
+      },
+
+      // 121
+      {
+        speaker: "You",
+        text: "That sounds like a plan"
+      },
+
+      // 122
+      {
+        speaker: "Milk",
+        text: "Sounds like the beginning of one"
+      },
+
+      // 122
+      {
+        speaker: "Milk",
+        text: "I'm almost thirty, I know that sounds like I'm saying it is late, I'm not"
+      },
+
+      // 122
+      {
+        speaker: "Milk",
+        text: "I just want to stop orbiting the things I want and actually land on them",
+        next: 220
+      },
+
+      // PATH 4C — Do you believe in anything (choice C from scene 107)
+      // 127
+      {
+        speaker: "Milk",
+        text: "That is a big question for a train platform"
+      },
+
+      // 128
+      {
+        speaker: "You",
+        text: "We have time"
+      },
+
+      // 129
+      {
+        speaker: "Milk",
+        text: "I believe in God, quietly, not the church version exactly, something more personal"
+      },
+
+      // 129
+      {
+        speaker: "Milk",
+        text: "Something that does not need a lot of explaining or defending"
+      },
+
+      // 130
+      {
+        speaker: "Milk",
+        text: "I believe the internet used to be genuinely magic and could be again"
+      },
+
+      // 130
+      {
+        speaker: "Milk",
+        text: "I believe Yume Nikki is one of the most important games ever made"
+      },
+
+      // 130
+      {
+        speaker: "Milk",
+        text: "I believe a crossbow made of Knex that launches pencils is a valid use of an afternoon"
+      },
+
+      // 131
+      {
+        speaker: "You",
+        text: "That is a wide range"
+      },
+
+      // 132
+      {
+        speaker: "Milk",
+        text: "I contain multitudes"
+      },
+
+      // 132
+      {
+        speaker: "Milk",
+        text: "Also it is one in the morning and the last train is late, this is the natural territory for big questions",
+        next: 220
+      },
+
+      // 144
+      {
+        speaker: "...",
+        text: "A sound begins at the edge of hearing, low, growing, from somewhere deep in the tunnel"
+      },
+
+      // 145
+      {
+        speaker: "...",
+        text: "You both notice it at the same time"
+      },
+
+      // 146
+      {
+        speaker: "Milk",
+        text: "There it is"
+      },
+
+      // 147
+      {
+        speaker: "...",
+        text: "He straightens slowly, picks up his bag, does not rush"
+      },
+
+      // 148
+      {
+        speaker: "...",
+        text: "The light at the mouth of the tunnel begins to grow, coming toward you through the dark"
+      },
+
+      // 149
+      {
+        speaker: "Milk",
+        text: "I want you to know I had my headphones ready and everything"
+      },
+
+      // 149
+      {
+        speaker: "Milk",
+        text: "I was fully prepared to spend this whole wait watching the tunnel"
+      },
+
+      // 150
+      {
+        speaker: "You",
+        text: "What changed?"
+      },
+
+      // 151
+      {
+        speaker: "Milk",
+        text: "You were there"
+      },
+
+      // 152
+      {
+        speaker: "...",
+        text: "He says it simply, not romantically, just as a fact"
+      },
+
+      // 153
+      {
+        speaker: "Milk",
+        text: "Most nights I would have kept the headphones in"
+      },
+
+      // 154
+      {
+        speaker: "...",
+        text: "The train pulls in slowly, brakes sighing, the doors slide open, yellow light spilling out onto the pale tiles"
+      },
+
+      // 155
+      {
+        speaker: "...",
+        text: "Milk steps toward the doors",
+        options: [
+          { text: "Takao, actually", next: 233 },
+          { text: "We split here", next: 235 },
+          { text: "(step to a different car)", next: 248 }
+        ]
+      },
+
+      // PATH 5A — Same direction, Takao (choice A from scene 156)
+      // 158
+      {
+        speaker: "Milk",
+        text: "Takao?"
+      },
+
+      // 159
+      {
+        speaker: "Milk",
+        text: "Come on then, it is not going to wait",
+        next: 260
+      },
+
+      // PATH 5B — We split here (choice B from scene 156)
+      // 160
+      {
+        speaker: "...",
+        text: "He nods, no performance about it"
+      },
+
+      // 161
+      {
+        speaker: "Milk",
+        text: "Yeah"
+      },
+
+      // 162
+      {
+        speaker: "...",
+        text: "He takes a step toward the doors, then pauses, half-turned"
+      },
+
+      // 163
+      {
+        speaker: "Milk",
+        text: "Hope the rest of the trip is good, wherever you are going after this"
+      },
+
+      // 164
+      {
+        speaker: "You",
+        text: "You too, Milk"
+      },
+
+      // 165
+      {
+        speaker: "Milk",
+        text: "Look for Milk online if you want to find me"
+      },
+
+      // 165
+      {
+        speaker: "Milk",
+        text: "You will know it is the right one by the bad color scheme"
+      },
+
+      // 166
+      {
+        speaker: "...",
+        text: "He raises a hand, barely a wave, more like an acknowledgment, steps on"
+      },
+
+      // 167
+      {
+        speaker: "...",
+        text: "The doors close"
+      },
+
+      // 168
+      {
+        speaker: "...",
+        text: "The train pulls away, the platform returns to silence"
+      },
+
+      // 169
+      {
+        speaker: "...",
+        text: "A station at one thirty in the morning, empty now, the last train gone"
+      },
+
+      // 170
+      {
+        speaker: "...",
+        text: "MILK will be remembered"
+      },
+
+      // 170
+      {
+        speaker: "...",
+        text: "[END — Goodbye on the Platform]",
+        next: null
+      },
+
+      // PATH 5C — Different car (choice C from scene 156)
+      // 172
+      {
+        speaker: "...",
+        text: "You move toward a door further down the platform, he notices, does not say anything about it"
+      },
+
+      // 173
+      {
+        speaker: "Milk",
+        text: "Hey"
+      },
+
+      // 174
+      {
+        speaker: "...",
+        text: "You look back"
+      },
+
+      // 175
+      {
+        speaker: "Milk",
+        text: "It was a good conversation"
+      },
+
+      // 176
+      {
+        speaker: "...",
+        text: "He says it like it cost him something small to say, which is maybe the most honest thing a person can do"
+      },
+
+      // 177
+      {
+        speaker: "...",
+        text: "You nod"
+      },
+
+      // 178
+      {
+        speaker: "...",
+        text: "The doors close between you"
+      },
+
+      // 179
+      {
+        speaker: "...",
+        text: "Through the window you can see him, standing, holding the overhead bar, looking at the tunnel"
+      },
+
+      // 180
+      {
+        speaker: "...",
+        text: "Not at his phone, just looking, the way he was when you first saw him"
+      },
+
+      // 181
+      {
+        speaker: "...",
+        text: "The train moves, the distance grows, at some point you lose him in the dark"
+      },
+
+      // 182
+      {
+        speaker: "...",
+        text: "MILK will be remembered"
+      },
+
+      // 182
+      {
+        speaker: "...",
+        text: "[END — Separate Cars]",
+        next: null
+      },
+
+      // 182
+      {
+        speaker: "...",
+        text: "The car rocks gently, just the two of you, the tunnel rushing by outside"
+      },
+
+      // 183
+      {
+        speaker: "...",
+        text: "You sit across from each other"
+      },
+
+      // 184
+      {
+        speaker: "Milk",
+        text: "You know what I've been thinking about lately"
+      },
+
+      // 184
+      {
+        speaker: "Milk",
+        text: "Everything I actually care about I came to through the back door, never the direct route, always some weird side entrance"
+      },
+
+      // 185
+      {
+        speaker: "You",
+        text: "Like what?"
+      },
+
+      // 186
+      {
+        speaker: "Milk",
+        text: "Programming through a math class I was failing, English through video games"
+      },
+
+      // 186
+      {
+        speaker: "Milk",
+        text: "Cycling because a kid on my street knocked on my door"
+      },
+
+      // 186
+      {
+        speaker: "Milk",
+        text: "The whole internet thing through a toy called Knex and a site that taught you how to build useless machines"
+      },
+
+      // 186
+      {
+        speaker: "Milk",
+        text: "Nothing I care about was something I was supposed to care about"
+      },
+
+      // 187
+      {
+        speaker: "You",
+        text: "Is that a problem?"
+      },
+
+      // 188
+      {
+        speaker: "Milk",
+        text: "No, I think it is just how I'm built, I've stopped fighting it"
+      },
+
+      // 188
+      {
+        speaker: "Milk",
+        text: "The back door gets you to the same place eventually, sometimes you see more interesting things on the way there",
+        options: [
+          { text: "What is next for you?", next: 272 },
+          { text: "Do you ever take the front door?", next: 279 },
+          { text: "Most useless thing you ever built?", next: 285 }
+        ]
+      },
+
+      // PATH 6A — What is next (choice A from scene 189)
+      // 191
+      {
+        speaker: "Milk",
+        text: "Getting back to writing code for a living, I was doing it for a while"
+      },
+
+      // 191
+      {
+        speaker: "Milk",
+        text: "Then took a detour back into business for a promotion that did not pan out the way they said it would"
+      },
+
+      // 191
+      {
+        speaker: "Milk",
+        text: "So now I'm just, going back, less dramatically than that sounds"
+      },
+
+      // 192
+      {
+        speaker: "You",
+        text: "You seem pretty settled about it"
+      },
+
+      // 193
+      {
+        speaker: "Milk",
+        text: "I've spent enough time standing near doors telling myself the timing is not right"
+      },
+
+      // 193
+      {
+        speaker: "Milk",
+        text: "At some point you just go through"
+      },
+
+      // 193
+      {
+        speaker: "Milk",
+        text: "The programming door, the travel door, various other doors, I'm getting better at just opening them",
+        next: 291
+      },
+
+      // PATH 6B — Do you ever take the front door (choice B from scene 189)
+      // 198
+      {
+        speaker: "Milk",
+        text: "Sometimes, I bought this plane ticket pretty directly"
+      },
+
+      // 198
+      {
+        speaker: "Milk",
+        text: "Said I would come here someday and then just bought it before I could think too much about it"
+      },
+
+      // 199
+      {
+        speaker: "You",
+        text: "That is very front door"
+      },
+
+      // 200
+      {
+        speaker: "Milk",
+        text: "I'm learning, I spent a long time orbiting the things I wanted to do instead of actually doing them"
+      },
+
+      // 200
+      {
+        speaker: "Milk",
+        text: "It is a habit I'm breaking slowly"
+      },
+
+      // 200
+      {
+        speaker: "Milk",
+        text: "Tokyo is part of that, if I can figure out a city where I cannot read anything, I can probably figure out most things",
+        next: 291
+      },
+
+      // PATH 6C — Most useless thing you ever built (choice C from scene 189)
+      // 206
+      {
+        speaker: "Milk",
+        text: "Knex crossbow that launched pencils, I've mentioned this already but it deserves to come up twice"
+      },
+
+      // 206
+      {
+        speaker: "Milk",
+        text: "Genuinely impressive engineering for a ten year old with no engineering training"
+      },
+
+      // 207
+      {
+        speaker: "You",
+        text: "What did you do with it?"
+      },
+
+      // 208
+      {
+        speaker: "Milk",
+        text: "Launched pencils, what else, there was no practical application, that was the whole point"
+      },
+
+      // 208
+      {
+        speaker: "Milk",
+        text: "Instructables taught me that the useless thing is always the most interesting thing to build"
+      },
+
+      // 208
+      {
+        speaker: "Milk",
+        text: "Still believe that honestly, everything I've built since has been some version of that crossbow",
+        next: 291
+      },
+
+      // 217
+      {
+        speaker: "...",
+        text: "The train decelerates, the lights of the station appear through the window, bright after all that tunnel dark"
+      },
+
+      // 218
+      {
+        speaker: "...",
+        text: "Takao, late enough that the platform is empty"
+      },
+
+      // 219
+      {
+        speaker: "...",
+        text: "Just the hum of the fluorescents and the cool air coming in from the mountain"
+      },
+
+      // 220
+      {
+        speaker: "...",
+        text: "Milk stands, picks up his bag, does not rush"
+      },
+
+      // 221
+      {
+        speaker: "Milk",
+        text: "I want to say something before we get off"
+      },
+
+      // 222
+      {
+        speaker: "You",
+        text: "Go ahead"
+      },
+
+      // 223
+      {
+        speaker: "Milk",
+        text: "I had my headphones ready and everything, I was completely prepared to spend that whole wait alone"
+      },
+
+      // 223
+      {
+        speaker: "Milk",
+        text: "I'm glad I did not"
+      },
+
+      // 224
+      {
+        speaker: "...",
+        text: "The doors open, cool air from the mountain"
+      },
+
+      // 225
+      {
+        speaker: "...",
+        text: "He steps out onto the platform, turns back once"
+      },
+
+      // 226
+      {
+        speaker: "Milk",
+        text: "Look for Milk online if you want to find me"
+      },
+
+      // 226
+      {
+        speaker: "Milk",
+        text: "You will know it is the right one by the bad color scheme and too many links to things nobody asked for"
+      },
+
+      // 227
+      {
+        speaker: "...",
+        text: "He raises his hand, not quite a wave, not quite a bow, something in between, something honest"
+      },
+
+      // 228
+      {
+        speaker: "...",
+        text: "The doors begin to close"
+      },
+
+      // 229
+      {
+        speaker: "...",
+        text: "The last image is him already turning, already walking, already moving"
+      },
+
+      // 230
+      {
+        speaker: "...",
+        text: "Just another person in a quiet station at the edge of the city"
+      },
+
+      // 231
+      {
+        speaker: "...",
+        text: "But now you know which one he is"
+      },
+
+      // 231
+      {
+        speaker: "...",
+        text: "[END — Takao]",
+        next: null
+      },
+    ];
+
+    // ─── FIXED CANVAS SCALING ────────────────────────────────────────────────────
+    const CANVAS_W = 1280, CANVAS_H = 720;
+    const scene = document.getElementById('scene');
+
+    function scaleScene() {
+      const scale = Math.min(window.innerWidth / CANVAS_W, window.innerHeight / CANVAS_H);
+      scene.style.transform = `scale(${scale})`;
+    }
+    window.addEventListener('resize', scaleScene);
+    scaleScene();
+    // ────────────────────────────────────────────────────────────────────────────
+
+    let current = 0;
+    let isTyping = false;
+    let twTimer = null;
+    let musicStarted = false;
+
+    const textEl = document.getElementById('dialogue-text');
+    const nameEl = document.getElementById('nameplate');
+    const optionsEl = document.getElementById('options');
+    const bgm = document.getElementById('bgm');
+
+    function startMusic() {
+      if (!musicStarted) {
+        bgm.play().catch(() => { });
+        musicStarted = true;
+      }
+    }
+
+    // Try autoplay immediately; fall back to first interaction if blocked
+    bgm.play().then(() => { musicStarted = true; }).catch(() => {
+      const unlock = () => { startMusic(); document.removeEventListener('click', unlock); };
+      document.addEventListener('click', unlock);
+    });
+
+    function showScene(index) {
+      current = index;
+      const s = scenes[index];
+      const narrator = s.speaker === '...';
+
+      nameEl.textContent = narrator ? 'Narrator' : s.speaker;
+      nameEl.dataset.speaker = narrator ? 'narrator' : s.speaker.toLowerCase();
+      textEl.className = narrator ? 'typing italic' : 'typing';
+      textEl.textContent = '';
+      optionsEl.innerHTML = '';
+      optionsEl.classList.add('hidden');
+
+      typewrite(s.text, () => {
+        textEl.className = narrator ? 'italic' : '';
+        const hasOptions = s.options && s.options.length;
+        if (!hasOptions && s.next !== null) textEl.classList.add('advance');
+        if (hasOptions) showOptions(s.options);
+      });
+    }
+
+    function typewrite(text, onDone) {
+      if (!text) { isTyping = false; onDone(); return; }
+      isTyping = true;
+      let i = 0;
+      twTimer = setInterval(() => {
+        textEl.textContent += text[i];
+        i++;
+        if (i >= text.length) {
+          clearInterval(twTimer);
+          twTimer = null;
+          isTyping = false;
+          onDone();
+        }
+      }, 28);
+    }
+
+    function skipTypewriter() {
+      if (twTimer) { clearInterval(twTimer); twTimer = null; }
+      isTyping = false;
+      const s = scenes[current];
+      const narrator = s.speaker === '...';
+      textEl.textContent = s.text;
+      textEl.className = narrator ? 'italic' : '';
+      const hasOptions = s.options && s.options.length;
+      if (!hasOptions && s.next !== null) textEl.classList.add('advance');
+      if (hasOptions) showOptions(s.options);
+    }
+
+    function showOptions(options) {
+      optionsEl.classList.remove('hidden');
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt.text;
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          showScene(opt.next);
+        });
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function advance() {
+      if (isTyping) { skipTypewriter(); return; }
+      const cur = scenes[current];
+      if (cur.options && cur.options.length) return;
+      if (cur.next === null) return;
+      const nextIndex = (cur.next !== undefined) ? cur.next : current + 1;
+      if (nextIndex < scenes.length) showScene(nextIndex);
+    }
+
+    scene.addEventListener('click', advance);
+
+    document.getElementById('close-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      bgm.pause();
+      bgm.currentTime = 0;
+    });
+
+    showScene(0);
+  </script>
+</body>
+
+</html>

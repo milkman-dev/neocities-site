@@ -1,0 +1,40 @@
+/* ── home page overrides & components ────── */
+
+/* 2-column layout matching blog (harmony) */
+#content { grid-template-columns: 1fr 220px; }
+
+/* retro solid boxes */
+.box          { border: 1px solid rgba(255,255,255,0.06); border-radius: 0; }
+aside .content-wrapper { padding: 0; }
+.box-title    { background: none; border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left; }
+.nav-button   { border-radius: 0; }
+
+/* solid section dividers */
+.retro-divider { border: none; border-top: 1px solid rgba(203,213,224,0.15); margin: var(--m) 0; }
+
+/* // currently status block */
+.status-line  { display: flex; gap: 6px; align-items: baseline; font-size: 14px; color: var(--text-muted); margin-bottom: var(--s); }
+.status-label { font-size: 13px; letter-spacing: 0.08em; color: var(--pastel); flex-shrink: 0; }
+
+/* section comment labels: // currently, // i am a */
+.section-label { font-size: 10px; letter-spacing: 0.08em; color: var(--accent); margin-bottom: var(--s); }
+
+/* scrolling ticker */
+.ticker { font-size: 13px; color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: var(--m); display: block; }
+
+/* small muted description (meet milk box) */
+.box-desc { font-size: 11px; color: var(--text-muted); margin-bottom: var(--s); line-height: 1.7; }
+
+.koi-img { cursor: pointer; }
+
+/* intro paragraphs in welcome box */
+.intro-p { margin-bottom: var(--m); text-align: justify; }
+
+/* vn link button */
+.dungeon-btn {
+  display: block; margin-top: var(--m); padding: 7px 20px;
+  border: 1px solid var(--link); color: var(--link);
+  text-decoration: none; font-size: 11px; letter-spacing: 0.08em;
+  text-align: center; transition: background 0.2s, color 0.2s;
+}
+.dungeon-btn:hover { background: var(--link); color: var(--bg); opacity: 1; }
