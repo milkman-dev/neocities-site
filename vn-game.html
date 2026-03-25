@@ -24,6 +24,13 @@
 
   <audio id="bgm" src="./res/ogg/2love.ogg" loop></audio>
 
+  <div id="start-overlay">
+    <div id="start-box">
+      <div id="start-title">meet milk</div>
+      <button id="start-btn">► START</button>
+    </div>
+  </div>
+
   <script>
     const scenes = [
       {
@@ -2011,17 +2018,12 @@
     const optionsEl = document.getElementById('options');
     const bgm = document.getElementById('bgm');
 
-    function startMusic() {
-      if (!musicStarted) {
-        bgm.play().catch(() => { });
-        musicStarted = true;
-      }
-    }
-
-    // Try autoplay immediately; fall back to first interaction if blocked
-    bgm.play().then(() => { musicStarted = true; }).catch(() => {
-      const unlock = () => { startMusic(); document.removeEventListener('click', unlock); };
-      document.addEventListener('click', unlock);
+    const startOverlay = document.getElementById('start-overlay');
+    document.getElementById('start-btn').addEventListener('click', function () {
+      startOverlay.style.display = 'none';
+      bgm.play().catch(() => { });
+      musicStarted = true;
+      showScene(0);
     });
 
     function showScene(index) {
@@ -2103,7 +2105,6 @@
       bgm.currentTime = 0;
     });
 
-    showScene(0);
   </script>
 </body>
 

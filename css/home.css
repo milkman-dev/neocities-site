@@ -36,5 +36,6 @@ aside .content-wrapper { padding: 0; }
   border: 1px solid var(--link); color: var(--link);
   text-decoration: none; font-size: 11px; letter-spacing: 0.08em;
   text-align: center; transition: background 0.2s, color 0.2s;
+  font-family: 'MinecraftFont', sans-serif;
 }
 .dungeon-btn:hover { background: var(--link); color: var(--bg); opacity: 1; }

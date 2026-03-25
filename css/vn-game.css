@@ -171,3 +171,46 @@ body {
 .option-btn::before { content: '□  '; }
 .option-btn:hover { color: #aaa; }
 .option-btn:hover::before { content: '■  '; }
+
+/* ── Start overlay ──────────────────────── */
+#start-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+#start-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+#start-title {
+  font-family: 'MinecraftFont', sans-serif;
+  font-size: 32px;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+
+#start-btn {
+  font-family: 'MinecraftFont', sans-serif;
+  font-size: 22px;
+  color: #fff;
+  background: #000;
+  border: 2px solid #fff;
+  padding: 14px 48px;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+  animation: blink 1.2s step-end infinite;
+}
+
+#start-btn:hover {
+  background: #fff;
+  color: #000;
+  animation: none;
+}
