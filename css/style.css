@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'MinecraftFont';
+  src: url("../res/font/mac's Tweaked Minecraft.woff2") format('woff2');
+}
+
 :root {
   --xs: 5px; --s: 8px; --m: 13px; --l: 21px; --xl: 34px;
   --bg: #1A202C; --box-bg: rgba(26,34,50,0.72);
@@ -21,13 +26,13 @@ a { color: var(--link); text-decoration: none; transition: opacity var(--t); }
 a:hover { opacity: 0.8; }
 #layout { max-width: 1000px; margin: var(--xl) auto; padding: 0 var(--m); }
 .box {
-  background: var(--box-bg); border-radius: var(--m); padding: var(--m); margin-bottom: var(--m);
+  background: var(--box-bg); border-radius: 0; padding: var(--m); margin-bottom: var(--m);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.06);
 }
 .box-title {
   color: var(--pastel); background: rgba(45,55,72,0.5);
-  border-radius: var(--s); padding: var(--xs) var(--s);
+  border-radius: 0; padding: var(--xs) var(--s);
   margin-bottom: var(--s); font-size: 11px;
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 0.12em; text-transform: lowercase;
@@ -37,14 +42,14 @@ a:hover { opacity: 0.8; }
 .nav-button {
   display: block; background: var(--nav-bg);
   padding: var(--xs) var(--m); margin-bottom: var(--xs);
-  border-radius: var(--s); font-weight: 500; text-align: center; transition: var(--t);
+  border-radius: 0; font-weight: 500; text-align: center; transition: var(--t);
   font-size: 13px;
 }
 ul.nav-list { font-size: 13px; }
 .nav-button:hover { opacity: 0.9; transform: translateX(2px); }
 
 /* ── Enter page ─────────────────────────────── */
-body.splash { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+body.splash { min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'MinecraftFont', sans-serif; }
 @keyframes rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
 .wrap { text-align: center; padding: 2rem; max-width: 480px; }
 .title {
@@ -73,11 +78,9 @@ body.splash { min-height: 100vh; display: flex; align-items: center; justify-con
 #content { display: grid; grid-template-columns: 220px 1fr 220px; gap: var(--l); }
 .pixelated { display: block; max-width: 100%; height: auto; margin: var(--xs) auto; image-rendering: pixelated; }
 .rounded-s { border-radius: var(--s); }
-ul.nav-list, ul.roles { list-style: none; margin: var(--s) 0; }
-ul.nav-list li, ul.roles li { margin-bottom: var(--xs); padding-left: var(--m); position: relative; }
-ul.nav-list li::before, ul.roles li::before { color: var(--accent); position: absolute; left: 0; }
-ul.nav-list li::before { content: "•"; font-size: 1.1em; }
-ul.roles li::before { content: "▸"; }
+ul.nav-list { list-style: none; margin: var(--s) 0; }
+ul.nav-list li { margin-bottom: var(--xs); padding-left: var(--m); position: relative; }
+ul.nav-list li::before { color: var(--accent); position: absolute; left: 0; content: "•"; font-size: 1.1em; }
 #koi-overlay {
   display: none; position: fixed; inset: 0; z-index: 9998;
   background: rgba(8,22,28,0.72); backdrop-filter: blur(14px) saturate(1.4);
