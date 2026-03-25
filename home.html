@@ -67,12 +67,15 @@
           </div>
         </div>
         <div class="box">
-          <div class="box-title">my friends</div>
+          <div class="box-title">cool sites</div>
           <div class="content-wrapper"></div>
         </div>
         <div class="box">
           <div class="content-wrapper">
-            <img src="./res/img/little-boi-side.gif" alt="little boi" class="pixelated rounded-s" />
+            <div class="little-boi-wrap" onclick="boiSpeak()">
+              <div class="little-boi-bubble" id="boi-bubble"></div>
+              <img src="./res/img/little-boi-side.gif" alt="little boi" class="pixelated rounded-s" />
+            </div>
           </div>
         </div>
       </aside>
@@ -82,10 +85,60 @@
 
   <div id="koi-overlay" onclick="closeKoi()">
     <img src="./res/img/koi-full.gif" alt="Koi" class="pixelated" onclick="event.stopPropagation()" />
-    <audio id="koi-audio" src="./res/ogg/Moseni_fog.ogg" loop></audio>
+    <audio id="koi-audio" src="https://raw.githubusercontent.com/milkman-dev/neocities-site/main/res/ogg/Moseni_fog.ogg" loop></audio>
   </div>
 
   <script>
+    var boiQuestions = [
+      "do you ever feel like you're performing yourself?",
+      "what are you avoiding right now?",
+      "who would you be if no one was watching?",
+      "when did you last feel truly known?",
+      "what do you keep meaning to forgive?",
+      "do you like who you are when you're alone?",
+      "what are you most afraid to want?",
+      "who taught you how to feel?",
+      "what version of yourself are you mourning?",
+      "are you here, or just present?",
+      "what do you think people misunderstand about you?",
+      "what are you pretending not to feel?",
+      "how much of you is real right now?",
+      "do you miss someone you've never met?",
+      "when did you stop trusting yourself?",
+      "what would you do if no one could judge you?",
+      "what do you need that you haven't asked for?",
+      "who are you when the room goes quiet?",
+      "what part of you never grew up?",
+      "are you running toward something or from it?",
+    ];
+    var boiLastIdx = -1;
+    var boiTimer = null;
+    var boiTypewriter = null;
+    function boiSpeak() {
+      var idx;
+      do { idx = Math.floor(Math.random() * boiQuestions.length); } while (idx === boiLastIdx);
+      boiLastIdx = idx;
+      var bubble = document.getElementById('boi-bubble');
+      if (boiTimer) clearTimeout(boiTimer);
+      if (boiTypewriter) clearInterval(boiTypewriter);
+      bubble.textContent = '';
+      bubble.classList.add('visible');
+      var words = boiQuestions[idx].split(' ');
+      var wi = 0;
+      boiTypewriter = setInterval(function () {
+        if (wi < words.length) {
+          bubble.textContent += (wi > 0 ? ' ' : '') + words[wi];
+          wi++;
+        } else {
+          clearInterval(boiTypewriter);
+          boiTypewriter = null;
+          boiTimer = setTimeout(function () {
+            bubble.classList.remove('visible');
+          }, 4000);
+        }
+      }, 120);
+    }
+
     function openKoi() {
       document.getElementById('koi-overlay').classList.add('active');
       document.getElementById('koi-audio').play();
@@ -97,6 +150,7 @@
     }
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeKoi(); });
   </script>
+  <script src="./js/stars.js"></script>
 </body>
 
 </html>

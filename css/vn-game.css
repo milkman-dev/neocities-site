@@ -3,11 +3,17 @@
   src: url("../res/font/mac's Tweaked Minecraft.woff2") format('woff2');
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 :root {
   --bg: #1A202C;
-  --box-bg: rgba(26,32,44,0.95);
+  --box-bg: rgba(26, 32, 44, 0.95);
   --text: #E2E8F0;
   --text-muted: #718096;
   --link: #FFE5B4;
@@ -57,6 +63,7 @@ body {
   opacity: 0.35;
   transition: background 0.1s, color 0.1s, opacity 0.1s;
 }
+
 #close-btn:hover {
   opacity: 1;
   background: #fff;
@@ -85,9 +92,21 @@ body {
 }
 
 /* Speaker name colors */
-#nameplate[data-speaker="milk"]     { color: #FFB7C5; } /* pastel pink */
-#nameplate[data-speaker="you"]      { color: #B5EAD7; } /* mint green */
-#nameplate[data-speaker="narrator"] { color: #C3B1E1; } /* soft lavender */
+#nameplate[data-speaker="milk"] {
+  color: #FFB7C5;
+}
+
+/* pastel pink */
+#nameplate[data-speaker="you"] {
+  color: #B5EAD7;
+}
+
+/* mint green */
+#nameplate[data-speaker="narrator"] {
+  color: #C3B1E1;
+}
+
+/* soft lavender */
 
 /* OMORI-style nameplate */
 #nameplate {
@@ -127,8 +146,13 @@ body {
   white-space: pre-wrap;
 }
 
-#dialogue-text:empty { min-height: 0; }
-#dialogue-text.italic { font-style: italic; }
+#dialogue-text:empty {
+  min-height: 0;
+}
+
+#dialogue-text.italic {
+  font-style: italic;
+}
 
 /* blinking cursor while typing */
 #dialogue-text.typing::after {
@@ -146,7 +170,11 @@ body {
   animation: blink 0.7s step-end infinite;
 }
 
-@keyframes blink { 50% { opacity: 0; } }
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
 
 /* ── Options ────────────────────────────── */
 #options {
@@ -155,7 +183,10 @@ body {
   flex-direction: column;
   gap: 8px;
 }
-#options.hidden { display: none; }
+
+#options.hidden {
+  display: none;
+}
 
 .option-btn {
   background: none;
@@ -168,9 +199,18 @@ body {
   padding: 4px 10px;
   transition: color 0.1s;
 }
-.option-btn::before { content: '□  '; }
-.option-btn:hover { color: #aaa; }
-.option-btn:hover::before { content: '■  '; }
+
+.option-btn::before {
+  content: '□  ';
+}
+
+.option-btn:hover {
+  color: #aaa;
+}
+
+.option-btn:hover::before {
+  content: '■  ';
+}
 
 /* ── Start overlay ──────────────────────── */
 #start-overlay {

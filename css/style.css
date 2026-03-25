@@ -26,7 +26,7 @@ body::after {
 }
 a { color: var(--link); text-decoration: none; transition: opacity var(--t); }
 a:hover { opacity: 0.8; }
-#layout { max-width: 1000px; margin: var(--xl) auto; padding: 0 var(--m); }
+#layout { max-width: 1000px; margin: var(--xl) auto; padding: 0 var(--m); position: relative; z-index: 2; }
 .box {
   background: var(--box-bg); border-radius: 0; padding: var(--m); margin-bottom: var(--m);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -92,7 +92,7 @@ ul.nav-list li::before { color: var(--accent); position: absolute; left: 0; cont
 #koi-overlay img { max-width: 90vw; max-height: 90vh; image-rendering: pixelated; border-radius: var(--m); }
 
 /* ── Blog ───────────────────────────────────── */
-#content-resume { display: grid; grid-template-columns: 1fr 220px; gap: var(--l); }
+#content-resume { display: grid; grid-template-columns: 1fr 220px; gap: var(--l); position: relative; z-index: 2; }
 .archive-section { margin-bottom: var(--l); }
 .archive-section:last-child { margin-bottom: 0; }
 .archive-year-heading {
