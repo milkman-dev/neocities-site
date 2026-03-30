@@ -33,22 +33,24 @@ a:hover { opacity: 0.8; }
   border: 1px solid rgba(255,255,255,0.06);
 }
 .box-title {
-  color: var(--pastel); background: rgba(45,55,72,0.5);
+  color: var(--pastel); background: none;
   border-radius: 0; padding: var(--xs) var(--s);
   margin-bottom: var(--s); font-size: 11px;
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 0.12em; text-transform: lowercase;
+  border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left;
 }
 .box-title::before { content: '// '; opacity: 0.5; }
 .content-wrapper { padding: var(--l); }
-.nav-button {
-  display: block; background: var(--nav-bg);
-  padding: var(--xs) var(--m); margin-bottom: var(--xs);
-  border-radius: 0; font-weight: 500; text-align: center; transition: var(--t);
-  font-size: 13px;
+.nav-button, .dungeon-btn {
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid var(--link); color: var(--link);
+  text-decoration: none; padding: 5px 14px; margin-bottom: var(--xs);
+  font-size: 9px; letter-spacing: 0.1em; line-height: 1;
+  text-transform: uppercase; font-family: 'MinecraftFont', sans-serif;
+  transition: background 0.2s, color 0.2s;
 }
-ul.nav-list { font-size: 13px; }
-.nav-button:hover { opacity: 0.9; transform: translateX(2px); }
+.nav-button:hover, .dungeon-btn:hover { background: var(--link); color: var(--bg); opacity: 1; }
 
 /* ── Enter page ─────────────────────────────── */
 body.splash { min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'MinecraftFont', sans-serif; }
@@ -77,12 +79,9 @@ body.splash { min-height: 100vh; display: flex; align-items: center; justify-con
 .enter:hover { background: var(--link); color: var(--bg); opacity: 1; }
 
 /* ── Home page ──────────────────────────────── */
-#content { display: grid; grid-template-columns: 220px 1fr 220px; gap: var(--l); }
+#content { display: grid; grid-template-columns: 1fr 220px; gap: var(--l); }
 .pixelated { display: block; max-width: 100%; height: auto; margin: var(--xs) auto; image-rendering: pixelated; }
 .rounded-s { border-radius: var(--s); }
-ul.nav-list { list-style: none; margin: var(--s) 0; }
-ul.nav-list li { margin-bottom: var(--xs); padding-left: var(--m); position: relative; }
-ul.nav-list li::before { color: var(--accent); position: absolute; left: 0; content: "•"; font-size: 1.1em; }
 #koi-overlay {
   display: none; position: fixed; inset: 0; z-index: 9998;
   background: rgba(8,22,28,0.72); backdrop-filter: blur(14px) saturate(1.4);
