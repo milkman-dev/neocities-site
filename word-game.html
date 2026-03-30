@@ -632,8 +632,26 @@
 
     document.getElementById('start-btn').addEventListener('click', function () {
       document.getElementById('start-overlay').style.display = 'none';
+
       const bgm = document.getElementById('bgm');
-      bgm.volume = 0.25;
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = ctx.createMediaElementSource(bgm);
+
+      // Low-pass filter for a slightly muffled, background feel
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 3200;
+      filter.Q.value = 0.8;
+
+      // Gain node for fade-in
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 3);
+
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
       bgm.play();
       playIntro();
     });
