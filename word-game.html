@@ -637,19 +637,26 @@
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const source = ctx.createMediaElementSource(bgm);
 
-      // Low-pass filter for a slightly muffled, background feel
+      // Low-pass filter — cuts highs so it sounds heard through a wall
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.value = 3200;
-      filter.Q.value = 0.8;
+      filter.frequency.value = 1400;
+      filter.Q.value = 0.5;
+
+      // Gentle high-shelf cut to further dull the presence
+      const shelf = ctx.createBiquadFilter();
+      shelf.type = 'highshelf';
+      shelf.frequency.value = 2000;
+      shelf.gain.value = -10;
 
       // Gain node for fade-in
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 3);
+      gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 3);
 
       source.connect(filter);
-      filter.connect(gain);
+      filter.connect(shelf);
+      shelf.connect(gain);
       gain.connect(ctx.destination);
 
       bgm.play();
