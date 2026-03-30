@@ -23,7 +23,8 @@
 
       <div id="char-panel">
         <a id="close-btn" href="./home.html">EXIT ×</a>
-        <img src="./res/img/succubus.png" alt="character sprite" id="char-sprite" />
+        <div id="neon-sign">記憶の楽園</div>
+        <img src="./res/img/succubus-oc.png" alt="character sprite" id="char-sprite" />
       </div>
 
       <div id="game-panel">
@@ -93,6 +94,8 @@
 
   </div><!-- /#scene -->
 
+  <audio id="bgm" src="https://raw.githubusercontent.com/milkman-dev/neocities-site/main/res/ogg/minimal-casino.mp3" loop></audio>
+
   <script>
     // ── Scene scaling ────────────────────────────────────────────
     const CANVAS_W = 1280, CANVAS_H = 720;
@@ -106,45 +109,45 @@
 
     // ── Word bank ────────────────────────────────────────────────
     const WORDS = {
-      3: ['cat','dog','sun','run','fly','map','pen','cup','hat','red','box','net','fog','jam','hug','oak','dew','owl','gem','axe',
-          'bay','bid','bun','cob','cod','cog','dam','din','dip','dot','dub','dug','elm','emu','eon','era','eve','ewe','fan','fat',
-          'fib','fin','fit','fix','foe','fun','gap','gas','gel','gin','gnu','gum','gut','hay','hem','hen','hex','hid','him','hip',
-          'hob','hog','hop','hub','hue','hut','ice','imp','ink','inn','ion','ire','ivy','jab','jag','jar','jaw','jay','jet','jig'],
-      4: ['lamp','bird','rain','cold','fish','dark','moon','tree','wind','dust','frog','leaf','pond','star','wolf','bell','cave',
-          'dove','fern','kite','barn','bear','boat','bone','boot','bowl','brew','brow','buck','bull','burp','bush','buzz','cake',
-          'calf','calm','camp','cane','card','cart','cave','clay','clip','clog','club','coal','coat','coin','colt','comb','cone',
-          'cord','cork','corn','crab','crop','crow','curl','damp','dart','dawn','deer','dent','dew','dial','dirt','dish','dome',
-          'door','dove','draw','drum','dusk','earl','east','echo','edge','eel','eggs','epic','fawn','felt','fern','film','flag'],
-      5: ['ocean','light','dream','cloud','flame','stone','river','crane','frost','bloom','grape','honey','ivory','jewel','lemon',
-          'maple','noble','olive','pearl','quilt','rebel','shrub','tiger','umbra','viola','waltz','xenon','yacht','zebra','abbey',
-          'acorn','adore','agile','album','aloft','amber','amble','angel','ankle','anvil','apron','arbor','ardor','arrow','attic',
-          'bacon','badge','bagel','baker','banjo','basic','basil','batch','beech','bench','berry','bevel','birch','bison','black',
-          'blade','bland','blank','blast','blaze','bleak','blend','bless','bliss','block','blood','bloom','blown','blunt','blurt'],
-      6: ['candle','forest','garden','breeze','castle','dragon','falcon','island','jungle','kitten','meadow','nectar','pebble',
-          'rabbit','sunset','throne','velvet','walnut','zenith','beacon','anchor','antler','ardent','armory','artery','artist',
-          'autumn','awning','bamboo','barrel','basket','battle','bellow','bitter','blazer','blouse','border','bottle','bounce',
-          'bounty','bridge','bridle','bronze','bucket','bundle','burrow','butter','button','cactus','canopy','canvas','carpet',
-          'carrot','cavern','cellar','cement','center','cermet','chapel','charge','cherry','chisel','cinder','circle','citrus',
-          'clamor','clover','cobble','coffee','column','combat','comet','copper','corner','cotton','cradle','crater','crimson'],
-      7: ['blanket','chimney','dolphin','feather','glacier','harvest','lantern','monster','octopus','pilgrim','rainbow','shelter',
-          'tornado','volcano','weather','fiction','impulse','journey','knights','magical','abandon','absolve','account','accused',
-          'acrobat','admiral','advance','affable','ailment','aileron','airlock','almanac','alphorn','ambient','ambling','amended',
-          'ancient','another','antique','anxiety','armored','arousal','arsenal','ascetic','ashamed','asunder','audible','balance',
-          'baffled','barrage','battery','bedroom','benefit','beneath','blossom','boulder','bowling','bracket','breadth','brewing',
-          'cabinet','captain','careful','cascade','cavalry','ceiling','charged','charity','chapter','classic','climate','cluster']
+      3: ['cat', 'dog', 'sun', 'run', 'fly', 'map', 'pen', 'cup', 'hat', 'red', 'box', 'net', 'fog', 'jam', 'hug', 'oak', 'dew', 'owl', 'gem', 'axe',
+        'bay', 'bid', 'bun', 'cob', 'cod', 'cog', 'dam', 'din', 'dip', 'dot', 'dub', 'dug', 'elm', 'emu', 'eon', 'era', 'eve', 'ewe', 'fan', 'fat',
+        'fib', 'fin', 'fit', 'fix', 'foe', 'fun', 'gap', 'gas', 'gel', 'gin', 'gnu', 'gum', 'gut', 'hay', 'hem', 'hen', 'hex', 'hid', 'him', 'hip',
+        'hob', 'hog', 'hop', 'hub', 'hue', 'hut', 'ice', 'imp', 'ink', 'inn', 'ion', 'ire', 'ivy', 'jab', 'jag', 'jar', 'jaw', 'jay', 'jet', 'jig'],
+      4: ['lamp', 'bird', 'rain', 'cold', 'fish', 'dark', 'moon', 'tree', 'wind', 'dust', 'frog', 'leaf', 'pond', 'star', 'wolf', 'bell', 'cave',
+        'dove', 'fern', 'kite', 'barn', 'bear', 'boat', 'bone', 'boot', 'bowl', 'brew', 'brow', 'buck', 'bull', 'burp', 'bush', 'buzz', 'cake',
+        'calf', 'calm', 'camp', 'cane', 'card', 'cart', 'cave', 'clay', 'clip', 'clog', 'club', 'coal', 'coat', 'coin', 'colt', 'comb', 'cone',
+        'cord', 'cork', 'corn', 'crab', 'crop', 'crow', 'curl', 'damp', 'dart', 'dawn', 'deer', 'dent', 'dew', 'dial', 'dirt', 'dish', 'dome',
+        'door', 'dove', 'draw', 'drum', 'dusk', 'earl', 'east', 'echo', 'edge', 'eel', 'eggs', 'epic', 'fawn', 'felt', 'fern', 'film', 'flag'],
+      5: ['ocean', 'light', 'dream', 'cloud', 'flame', 'stone', 'river', 'crane', 'frost', 'bloom', 'grape', 'honey', 'ivory', 'jewel', 'lemon',
+        'maple', 'noble', 'olive', 'pearl', 'quilt', 'rebel', 'shrub', 'tiger', 'umbra', 'viola', 'waltz', 'xenon', 'yacht', 'zebra', 'abbey',
+        'acorn', 'adore', 'agile', 'album', 'aloft', 'amber', 'amble', 'angel', 'ankle', 'anvil', 'apron', 'arbor', 'ardor', 'arrow', 'attic',
+        'bacon', 'badge', 'bagel', 'baker', 'banjo', 'basic', 'basil', 'batch', 'beech', 'bench', 'berry', 'bevel', 'birch', 'bison', 'black',
+        'blade', 'bland', 'blank', 'blast', 'blaze', 'bleak', 'blend', 'bless', 'bliss', 'block', 'blood', 'bloom', 'blown', 'blunt', 'blurt'],
+      6: ['candle', 'forest', 'garden', 'breeze', 'castle', 'dragon', 'falcon', 'island', 'jungle', 'kitten', 'meadow', 'nectar', 'pebble',
+        'rabbit', 'sunset', 'throne', 'velvet', 'walnut', 'zenith', 'beacon', 'anchor', 'antler', 'ardent', 'armory', 'artery', 'artist',
+        'autumn', 'awning', 'bamboo', 'barrel', 'basket', 'battle', 'bellow', 'bitter', 'blazer', 'blouse', 'border', 'bottle', 'bounce',
+        'bounty', 'bridge', 'bridle', 'bronze', 'bucket', 'bundle', 'burrow', 'butter', 'button', 'cactus', 'canopy', 'canvas', 'carpet',
+        'carrot', 'cavern', 'cellar', 'cement', 'center', 'cermet', 'chapel', 'charge', 'cherry', 'chisel', 'cinder', 'circle', 'citrus',
+        'clamor', 'clover', 'cobble', 'coffee', 'column', 'combat', 'comet', 'copper', 'corner', 'cotton', 'cradle', 'crater', 'crimson'],
+      7: ['blanket', 'chimney', 'dolphin', 'feather', 'glacier', 'harvest', 'lantern', 'monster', 'octopus', 'pilgrim', 'rainbow', 'shelter',
+        'tornado', 'volcano', 'weather', 'fiction', 'impulse', 'journey', 'knights', 'magical', 'abandon', 'absolve', 'account', 'accused',
+        'acrobat', 'admiral', 'advance', 'affable', 'ailment', 'aileron', 'airlock', 'almanac', 'alphorn', 'ambient', 'ambling', 'amended',
+        'ancient', 'another', 'antique', 'anxiety', 'armored', 'arousal', 'arsenal', 'ascetic', 'ashamed', 'asunder', 'audible', 'balance',
+        'baffled', 'barrage', 'battery', 'bedroom', 'benefit', 'beneath', 'blossom', 'boulder', 'bowling', 'bracket', 'breadth', 'brewing',
+        'cabinet', 'captain', 'careful', 'cascade', 'cavalry', 'ceiling', 'charged', 'charity', 'chapter', 'classic', 'climate', 'cluster']
     };
 
     // ── Round config ─────────────────────────────────────────────
     const ROUND_TABLE = [
-      { words: 3, lengths: [3],   display: 5,   typing: 35 },
-      { words: 3, lengths: [4],   display: 4,   typing: 30 },
-      { words: 4, lengths: [4],   display: 4,   typing: 30 },
-      { words: 4, lengths: [5],   display: 3.5, typing: 28 },
-      { words: 5, lengths: [5],   display: 3,   typing: 25 },
-      { words: 5, lengths: [5,6], display: 2.5, typing: 23 },
-      { words: 6, lengths: [6],   display: 2.5, typing: 22 },
-      { words: 6, lengths: [6],   display: 2,   typing: 20 },
-      { words: 7, lengths: [6,7], display: 2,   typing: 18 },
+      { words: 3, lengths: [3], display: 5, typing: 35 },
+      { words: 3, lengths: [4], display: 4, typing: 30 },
+      { words: 4, lengths: [4], display: 4, typing: 30 },
+      { words: 4, lengths: [5], display: 3.5, typing: 28 },
+      { words: 5, lengths: [5], display: 3, typing: 25 },
+      { words: 5, lengths: [5, 6], display: 2.5, typing: 23 },
+      { words: 6, lengths: [6], display: 2.5, typing: 22 },
+      { words: 6, lengths: [6], display: 2, typing: 20 },
+      { words: 7, lengths: [6, 7], display: 2, typing: 18 },
     ];
     function getRoundConfig(round) {
       if (round <= 9) return ROUND_TABLE[round - 1];
@@ -159,64 +162,122 @@
 
     // ── Little Boi messages ──────────────────────────────────────
     const BOI_MESSAGES = {
-      intro:    ["eyes on the table, scum", "try to keep up", "watch carefully", "don't you dare blink"],
-      showing:  ["...", "focus", "keep up", "stay with me, scum"],
-      typing:   [
-        "well? what do you remember",
-        "show me what you've got",
-        "anytime now, scum",
-        "go on, impress me",
-        "tick tock, darling",
-        "you do remember, right?",
-        "i'm waiting~",
-        "don't disappoint me",
-        "is that all you've got?",
-        "come on, scum",
-        "you call that memory?",
-        "surely you remember more than that",
-        "how cute, you're thinking so hard",
-        "the clock doesn't care, darling",
-        "i've seen goldfish with better recall",
-        "really? that's it?",
-        "this is almost painful to watch",
-        "i'm not impressed yet",
-        "you're running out of time, darling",
-        "try harder",
-        "is your brain even on?",
-        "how adorable, you're struggling",
-        "i expected more from you",
-        "the timer doesn't lie, scum",
-        "still thinking? how sweet",
-        "don't tell me you forgot already",
-        "you had one job",
-        "i'm starting to feel sorry for you",
-        "are you even trying?",
-        "darling, focus",
-        "every second you waste i enjoy",
-        "you've got hearts to spare, right?",
-        "come on, dig deep",
-        "i'll be here all day if i have to",
-        "not bad for a scum, but not good either",
-        "keep going, i know there's more",
-        "you're adorable when you struggle",
-        "the words are still in there, somewhere",
-        "maybe memory games weren't your thing",
-        "i'm watching, scum",
+      intro: [
+        "eyes on the table",
+        "try not to disappoint me",
+        "pay attention this time",
+        "don't blink",
       ],
-      success:  ["hm, not bad", "well played, scum", "i'm almost impressed", "flawless, for now"],
-      partial:  ["how disappointing", "i expected better", "so close~ and yet", "not quite, darling"],
-      gameover: ["game over, scum", "the house always wins", "adorable, you lost", "come back when you're ready"],
+      showing: [
+        "...",
+        "focus",
+        "are you watching",
+        "keep up",
+      ],
+      typing: [
+        "hmm",
+        "really",
+        "...that's it?",
+        "nothing?",
+        "boring",
+        "come on",
+        "well?",
+        "is that really all?",
+        "you had more... i know you did",
+        "don't tell me you've already forgotten",
+        "there were more words than that",
+        "struggling are we?",
+        "oh is it hard... poor thing~",
+        "you look so serious right now",
+        "the concentration face is... something",
+        "i've seen better from first-timers",
+        "i'm still here you know",
+        "take your time~ no rush",
+        "you could impress me if you tried",
+        "i'll wait... i'm very patient",
+        "...you're not completely hopeless",
+        "the clock doesn't negotiate",
+        "the house always wins... eventually",
+        "other players don't hesitate like this",
+        "every second you waste... i enjoy~",
+        "you're staring at the input like it owes you something",
+        "it's alright to struggle... doesn't make it less entertaining",
+        "think harder... i can practically see the gears turning",
+        "you do remember something don't you",
+        "surely there were more",
+        "i'm watching... little one",
+        "the timer cares even if i don't",
+        "don't give up on me now",
+        "there's no shame in trying... but there is in stopping",
+        "...still thinking... how sweet",
+        "you had one job",
+        "dig a little deeper",
+        "i haven't looked away once~",
+        "almost out of time... little one",
+        "what a face you're making",
+      ],
+      success: [
+        "...hm not bad",
+        "i suppose you paid attention",
+        "fine... that was acceptable",
+        "don't look so pleased with yourself",
+        "...i'll admit... that was decent",
+        "you can stay another round",
+      ],
+      partial: [
+        "so close... and yet",
+        "almost... you were almost there",
+        "you dropped one... tsk",
+        "disappointing... but fixable",
+        "not quite little one",
+        "i expected more... try again",
+      ],
+      idle: [
+        "...are you going to play or just sit there",
+        "i don't have all night you know",
+        "hello?",
+        "take your time... really... it's not like i'm waiting~",
+        "...still here",
+        "you do remember the words right",
+        "any day now",
+        "the clock is running... just so you know",
+      ],
+      gameover: [
+        "and that's that... settle up",
+        "game over... you lasted longer than most",
+        "everyone loses eventually... even the good ones",
+        "come back when you're ready to focus",
+      ],
+      correct: [
+        "...oh",
+        "fine... that counts",
+        "hm... carry on",
+        "so you do remember~",
+        "not bad",
+        "i'll allow it",
+        "one down",
+      ],
+      wrong: [
+        "no",
+        "try again",
+        "...really?",
+        "that wasn't it",
+        "nope",
+        "not even close",
+        "wrong",
+        "that wasn't one of them",
+      ],
     };
 
     const INTRO_LINES = [
-      { text: "welcome to my table, scum", ms: 2400 },
-      { text: "try not to look so nervous", ms: 2200 },
-      { text: "i'll show you words, one at a time", ms: 2600 },
-      { text: "memorize every single one", ms: 2200 },
-      { text: "when i'm done, type them all back", ms: 2600 },
-      { text: "miss too many and you lose a heart", ms: 2600 },
-      { text: "five hearts, try not to waste them all at once", ms: 2600 },
-      { text: "don't keep me waiting", ms: 2000 },
+      { text: "oh... a new face", ms: 2000 },
+      { text: "sit down... i don't bite~", ms: 2000 },
+      { text: "i'll show you words one at a time", ms: 2600 },
+      { text: "remember all of them", ms: 1800 },
+      { text: "when i'm done type back everything you saw", ms: 2600 },
+      { text: "miss too many and you lose a heart", ms: 2400 },
+      { text: "you have five... please don't waste them all", ms: 2600 },
+      { text: "...ready when you are", ms: 2000 },
     ];
 
     const PHASE_LABELS = {
@@ -232,30 +293,67 @@
       bubble.classList.add('visible');
     }
     function boiShow(text) {
+      if (state.typewriterTimer) {
+        clearTimeout(state.typewriterTimer);
+        state.typewriterTimer = null;
+      }
       const bubble = document.getElementById('boi-bubble');
       bubble.textContent = text;
       bubble.classList.add('visible');
+    }
+
+    function boiTypewrite(text) {
+      if (state.typewriterTimer) {
+        clearTimeout(state.typewriterTimer);
+        state.typewriterTimer = null;
+      }
+      const bubble = document.getElementById('boi-bubble');
+      bubble.textContent = '';
+      bubble.classList.add('visible');
+      let i = 0;
+      function tick() {
+        if (i < text.length) {
+          bubble.textContent += text[i++];
+          state.typewriterTimer = setTimeout(tick, 28);
+        } else {
+          state.typewriterTimer = null;
+        }
+      }
+      tick();
     }
     function boiHide() {
       document.getElementById('boi-bubble').classList.remove('visible');
     }
 
-    function startTypingTaunts(typingSeconds) {
-      const interval = Math.max(4500, Math.floor(typingSeconds * 1000 / 6));
-      const msgs = BOI_MESSAGES.typing;
-      let last = -1;
-      function next() {
-        let idx;
-        do { idx = Math.floor(Math.random() * msgs.length); } while (idx === last && msgs.length > 1);
-        last = idx;
-        boiShow(msgs[idx]);
-      }
-      next();
-      state.tauntInterval = setInterval(next, interval);
-    }
     function stopTypingTaunts() {
       clearInterval(state.tauntInterval);
       state.tauntInterval = null;
+      clearTimeout(state.tauntTimeout);
+      state.tauntTimeout = null;
+      clearTimeout(state.idleTimeout);
+      state.idleTimeout = null;
+    }
+
+    function scheduleTaunt() {
+      clearTimeout(state.tauntTimeout);
+      state.tauntTimeout = setTimeout(() => {
+        state.tauntTimeout = null;
+        if (state.phase === 'typing') {
+          const msgs = BOI_MESSAGES.typing;
+          boiTypewrite(msgs[Math.floor(Math.random() * msgs.length)]);
+          resetIdleTimer();
+        }
+      }, 5000);
+    }
+
+    function resetIdleTimer() {
+      clearTimeout(state.idleTimeout);
+      state.idleTimeout = setTimeout(() => {
+        if (state.phase !== 'typing') return;
+        const msgs = BOI_MESSAGES.idle;
+        boiTypewrite(msgs[Math.floor(Math.random() * msgs.length)]);
+        resetIdleTimer();
+      }, 9000);
     }
 
     async function playIntro() {
@@ -278,7 +376,12 @@
       submittedWords: [],
       roundId: 0,
       typingTimeout: null,
+      typingSeconds: 0,
       tauntInterval: null,
+      tauntTimeout: null,
+      idleTimeout: null,
+      typewriterTimer: null,
+      lastReactionTime: 0,
     };
 
     // ── Helpers ──────────────────────────────────────────────────
@@ -309,9 +412,31 @@
       bar.style.width = '0%';
     }
 
+    function penalizeTimer() {
+      const bar = document.getElementById('timer-bar');
+      const wrap = document.getElementById('timer-bar-wrap');
+      const currentWidth = bar.getBoundingClientRect().width;
+      const totalWidth = wrap.getBoundingClientRect().width;
+      if (totalWidth === 0 || state.typingSeconds === 0) return;
+      const currentFraction = currentWidth / totalWidth;
+      const newFraction = Math.max(0, currentFraction - 0.08);
+      const remainingSeconds = newFraction * state.typingSeconds;
+      bar.style.transition = 'none';
+      bar.style.width = (newFraction * 100) + '%';
+      bar.offsetWidth;
+      bar.style.transition = `width ${remainingSeconds}s linear`;
+      bar.style.width = '0%';
+      clearTimeout(state.typingTimeout);
+      const myRoundId = state.roundId;
+      state.typingTimeout = setTimeout(() => {
+        if (state.roundId !== myRoundId) return;
+        evaluateRound(myRoundId);
+      }, remainingSeconds * 1000);
+    }
+
     function updateHUD() {
-      document.getElementById('round-display').textContent = String(state.round).padStart(2,'0');
-      document.getElementById('score-display').textContent = String(state.score).padStart(2,'0');
+      document.getElementById('round-display').textContent = String(state.round).padStart(2, '0');
+      document.getElementById('score-display').textContent = String(state.score).padStart(2, '0');
 
       const heartsEl = document.getElementById('hearts');
       heartsEl.innerHTML = '';
@@ -353,7 +478,7 @@
       stopTimerBar();
       updateHUD();
 
-      document.getElementById('ready-text').textContent = `ROUND  ${String(state.round).padStart(2,'0')}`;
+      document.getElementById('ready-text').textContent = `ROUND  ${String(state.round).padStart(2, '0')}`;
       document.getElementById('ready-screen').classList.remove('hidden');
       boiSay('intro');
       await delay(2200);
@@ -374,7 +499,7 @@
 
       for (const word of state.currentWords) {
         if (state.roundId !== myRoundId) return;
-        bubble.textContent = word.toUpperCase();
+        bubble.textContent = word.toUpperCase().split('').join(' ');
         bubble.classList.add('visible', 'word-display');
         startTimerBar(config.display);
         await delay(config.display * 1000);
@@ -392,8 +517,10 @@
       updateHUD();
       document.getElementById('typing-area').classList.remove('hidden');
       document.getElementById('word-input').focus();
+      state.typingSeconds = config.typing;
       startTimerBar(config.typing);
-      startTypingTaunts(config.typing);
+      boiShow('...');
+      resetIdleTimer();
 
       state.typingTimeout = setTimeout(() => {
         if (state.roundId !== myRoundId) return;
@@ -411,6 +538,17 @@
 
       const correct = state.currentWords.includes(typed);
       state.submittedWords.push(typed);
+
+      if (!correct) penalizeTimer();
+      resetIdleTimer();
+      const now = Date.now();
+      const WRONG_COOLDOWN = 2000;
+      if (correct || now - state.lastReactionTime >= WRONG_COOLDOWN) {
+        state.lastReactionTime = now;
+        const pool = BOI_MESSAGES[correct ? 'correct' : 'wrong'];
+        boiTypewrite(pool[Math.floor(Math.random() * pool.length)]);
+        scheduleTaunt();
+      }
 
       const pill = document.createElement('span');
       pill.className = 'submitted-word' + (correct ? ' correct' : '');
@@ -482,23 +620,26 @@
       document.getElementById('gameover-screen').classList.remove('hidden');
     }
 
-    document.getElementById('word-input').addEventListener('keydown', function(e) {
+    document.getElementById('word-input').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') submitWord();
     });
 
-    document.getElementById('restart-btn').addEventListener('click', function() {
+    document.getElementById('restart-btn').addEventListener('click', function () {
       document.getElementById('gameover-screen').classList.add('hidden');
       boiHide();
       startGame();
     });
 
-    document.getElementById('start-btn').addEventListener('click', function() {
+    document.getElementById('start-btn').addEventListener('click', function () {
       document.getElementById('start-overlay').style.display = 'none';
+      const bgm = document.getElementById('bgm');
+      bgm.volume = 0.25;
+      bgm.play();
       playIntro();
     });
 
     // ── Marquee setup ────────────────────────────────────────────
-    document.fonts.ready.then(function() {
+    document.fonts.ready.then(function () {
       const inner = document.querySelector('.marquee-inner');
       const source = inner.querySelector('span');
       const containerW = inner.parentElement.offsetWidth;
