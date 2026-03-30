@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Game</title>
+  <link rel="icon" href="./res/img/milkmandev-avatar.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/word-game.css">
+</head>
+
+<body>
+
+  <div id="scene">
+    <div class="inner-border"></div>
+    <div class="scanlines"></div>
+
+    <!-- Main row: char panel + right column -->
+    <div id="main-row">
+
+      <div id="char-panel">
+        <a id="close-btn" href="./home.html">EXIT ×</a>
+        <img src="./res/img/succubus.png" alt="character sprite" id="char-sprite" />
+      </div>
+
+      <div id="game-panel">
+        <div id="title-bar">
+          <span id="game-title">ワード記憶ゲーム</span>
+          <div id="title-stats">
+            <span>RND&nbsp;<span id="round-display">01</span></span>
+            <span>SCR&nbsp;<span id="score-display">00</span></span>
+          </div>
+        </div>
+
+        <div id="top-area">
+          <div id="correct-words-panel">
+            <div class="panel-header">
+              <div class="marquee-inner">
+                <span>記憶した言葉</span>
+              </div>
+            </div>
+            <div id="correct-words-list"></div>
+          </div>
+          <div id="lives-panel">
+            <div id="hearts"></div>
+          </div>
+        </div>
+
+        <div class="video-panel">
+          <div id="submitted-words"></div>
+          <div id="typing-area" class="hidden">
+            <span class="terminal-prompt">›</span>
+            <input id="word-input" type="text" autocomplete="off" spellcheck="false" />
+          </div>
+        </div>
+
+        <div id="timer-bar-wrap">
+          <div id="timer-bar"></div>
+        </div>
+      </div>
+
+    </div><!-- /#main-row -->
+
+    <div id="boi-area">
+      <div id="boi-text-area">
+        <span id="boi-arrow">▶</span>
+        <div id="boi-bubble"></div><span class="cursor"></span>
+      </div>
+    </div>
+
+    <!-- Overlays — absolute, cover whole scene -->
+    <div id="ready-screen" class="hidden">
+      <div id="ready-eyebrow">get ready</div>
+      <span id="ready-text">ROUND 01</span>
+    </div>
+
+    <div id="gameover-screen" class="hidden">
+      <div id="gameover-title">GAME OVER</div>
+      <div id="final-score"></div>
+      <button id="restart-btn">► RESTART</button>
+    </div>
+
+    <div id="start-overlay">
+      <div id="start-box">
+        <div id="start-title">ワード記憶ゲーム</div>
+        <button id="start-btn">► START</button>
+        <div id="start-hint">step up to the table</div>
+      </div>
+    </div>
+
+  </div><!-- /#scene -->
+
+  <script>
+    // ── Scene scaling ────────────────────────────────────────────
+    const CANVAS_W = 1280, CANVAS_H = 720;
+    const scene = document.getElementById('scene');
+    function scaleScene() {
+      const scale = Math.min(window.innerWidth / CANVAS_W, window.innerHeight / CANVAS_H);
+      scene.style.transform = `scale(${scale})`;
+    }
+    window.addEventListener('resize', scaleScene);
+    scaleScene();
+
+    // ── Word bank ────────────────────────────────────────────────
+    const WORDS = {
+      3: ['cat','dog','sun','run','fly','map','pen','cup','hat','red','box','net','fog','jam','hug','oak','dew','owl','gem','axe',
+          'bay','bid','bun','cob','cod','cog','dam','din','dip','dot','dub','dug','elm','emu','eon','era','eve','ewe','fan','fat',
+          'fib','fin','fit','fix','foe','fun','gap','gas','gel','gin','gnu','gum','gut','hay','hem','hen','hex','hid','him','hip',
+          'hob','hog','hop','hub','hue','hut','ice','imp','ink','inn','ion','ire','ivy','jab','jag','jar','jaw','jay','jet','jig'],
+      4: ['lamp','bird','rain','cold','fish','dark','moon','tree','wind','dust','frog','leaf','pond','star','wolf','bell','cave',
+          'dove','fern','kite','barn','bear','boat','bone','boot','bowl','brew','brow','buck','bull','burp','bush','buzz','cake',
+          'calf','calm','camp','cane','card','cart','cave','clay','clip','clog','club','coal','coat','coin','colt','comb','cone',
+          'cord','cork','corn','crab','crop','crow','curl','damp','dart','dawn','deer','dent','dew','dial','dirt','dish','dome',
+          'door','dove','draw','drum','dusk','earl','east','echo','edge','eel','eggs','epic','fawn','felt','fern','film','flag'],
+      5: ['ocean','light','dream','cloud','flame','stone','river','crane','frost','bloom','grape','honey','ivory','jewel','lemon',
+          'maple','noble','olive','pearl','quilt','rebel','shrub','tiger','umbra','viola','waltz','xenon','yacht','zebra','abbey',
+          'acorn','adore','agile','album','aloft','amber','amble','angel','ankle','anvil','apron','arbor','ardor','arrow','attic',
+          'bacon','badge','bagel','baker','banjo','basic','basil','batch','beech','bench','berry','bevel','birch','bison','black',
+          'blade','bland','blank','blast','blaze','bleak','blend','bless','bliss','block','blood','bloom','blown','blunt','blurt'],
+      6: ['candle','forest','garden','breeze','castle','dragon','falcon','island','jungle','kitten','meadow','nectar','pebble',
+          'rabbit','sunset','throne','velvet','walnut','zenith','beacon','anchor','antler','ardent','armory','artery','artist',
+          'autumn','awning','bamboo','barrel','basket','battle','bellow','bitter','blazer','blouse','border','bottle','bounce',
+          'bounty','bridge','bridle','bronze','bucket','bundle','burrow','butter','button','cactus','canopy','canvas','carpet',
+          'carrot','cavern','cellar','cement','center','cermet','chapel','charge','cherry','chisel','cinder','circle','citrus',
+          'clamor','clover','cobble','coffee','column','combat','comet','copper','corner','cotton','cradle','crater','crimson'],
+      7: ['blanket','chimney','dolphin','feather','glacier','harvest','lantern','monster','octopus','pilgrim','rainbow','shelter',
+          'tornado','volcano','weather','fiction','impulse','journey','knights','magical','abandon','absolve','account','accused',
+          'acrobat','admiral','advance','affable','ailment','aileron','airlock','almanac','alphorn','ambient','ambling','amended',
+          'ancient','another','antique','anxiety','armored','arousal','arsenal','ascetic','ashamed','asunder','audible','balance',
+          'baffled','barrage','battery','bedroom','benefit','beneath','blossom','boulder','bowling','bracket','breadth','brewing',
+          'cabinet','captain','careful','cascade','cavalry','ceiling','charged','charity','chapter','classic','climate','cluster']
+    };
+
+    // ── Round config ─────────────────────────────────────────────
+    const ROUND_TABLE = [
+      { words: 3, lengths: [3],   display: 5,   typing: 35 },
+      { words: 3, lengths: [4],   display: 4,   typing: 30 },
+      { words: 4, lengths: [4],   display: 4,   typing: 30 },
+      { words: 4, lengths: [5],   display: 3.5, typing: 28 },
+      { words: 5, lengths: [5],   display: 3,   typing: 25 },
+      { words: 5, lengths: [5,6], display: 2.5, typing: 23 },
+      { words: 6, lengths: [6],   display: 2.5, typing: 22 },
+      { words: 6, lengths: [6],   display: 2,   typing: 20 },
+      { words: 7, lengths: [6,7], display: 2,   typing: 18 },
+    ];
+    function getRoundConfig(round) {
+      if (round <= 9) return ROUND_TABLE[round - 1];
+      const over = round - 9;
+      return {
+        words: 7 + Math.ceil(over / 2),
+        lengths: [6, 7],
+        display: 2,
+        typing: Math.max(15, 18 - Math.floor(over / 2)),
+      };
+    }
+
+    // ── Little Boi messages ──────────────────────────────────────
+    const BOI_MESSAGES = {
+      intro:    ["eyes on the table, scum", "try to keep up", "watch carefully", "don't you dare blink"],
+      showing:  ["...", "focus", "keep up", "stay with me, scum"],
+      typing:   [
+        "well? what do you remember",
+        "show me what you've got",
+        "anytime now, scum",
+        "go on, impress me",
+        "tick tock, darling",
+        "you do remember, right?",
+        "i'm waiting~",
+        "don't disappoint me",
+        "is that all you've got?",
+        "come on, scum",
+        "you call that memory?",
+        "surely you remember more than that",
+        "how cute, you're thinking so hard",
+        "the clock doesn't care, darling",
+        "i've seen goldfish with better recall",
+        "really? that's it?",
+        "this is almost painful to watch",
+        "i'm not impressed yet",
+        "you're running out of time, darling",
+        "try harder",
+        "is your brain even on?",
+        "how adorable, you're struggling",
+        "i expected more from you",
+        "the timer doesn't lie, scum",
+        "still thinking? how sweet",
+        "don't tell me you forgot already",
+        "you had one job",
+        "i'm starting to feel sorry for you",
+        "are you even trying?",
+        "darling, focus",
+        "every second you waste i enjoy",
+        "you've got hearts to spare, right?",
+        "come on, dig deep",
+        "i'll be here all day if i have to",
+        "not bad for a scum, but not good either",
+        "keep going, i know there's more",
+        "you're adorable when you struggle",
+        "the words are still in there, somewhere",
+        "maybe memory games weren't your thing",
+        "i'm watching, scum",
+      ],
+      success:  ["hm, not bad", "well played, scum", "i'm almost impressed", "flawless, for now"],
+      partial:  ["how disappointing", "i expected better", "so close~ and yet", "not quite, darling"],
+      gameover: ["game over, scum", "the house always wins", "adorable, you lost", "come back when you're ready"],
+    };
+
+    const INTRO_LINES = [
+      { text: "welcome to my table, scum", ms: 2400 },
+      { text: "try not to look so nervous", ms: 2200 },
+      { text: "i'll show you words, one at a time", ms: 2600 },
+      { text: "memorize every single one", ms: 2200 },
+      { text: "when i'm done, type them all back", ms: 2600 },
+      { text: "miss too many and you lose a heart", ms: 2600 },
+      { text: "five hearts, try not to waste them all at once", ms: 2600 },
+      { text: "don't keep me waiting", ms: 2000 },
+    ];
+
+    const PHASE_LABELS = {
+      idle: '--', ready: '準備中', showing: '表示中',
+      typing: '入力中', eval: '評価中', gameover: '終了'
+    };
+
+    function boiSay(category) {
+      const msgs = BOI_MESSAGES[category];
+      const msg = msgs[Math.floor(Math.random() * msgs.length)];
+      const bubble = document.getElementById('boi-bubble');
+      bubble.textContent = msg;
+      bubble.classList.add('visible');
+    }
+    function boiShow(text) {
+      const bubble = document.getElementById('boi-bubble');
+      bubble.textContent = text;
+      bubble.classList.add('visible');
+    }
+    function boiHide() {
+      document.getElementById('boi-bubble').classList.remove('visible');
+    }
+
+    function startTypingTaunts(typingSeconds) {
+      const interval = Math.max(4500, Math.floor(typingSeconds * 1000 / 6));
+      const msgs = BOI_MESSAGES.typing;
+      let last = -1;
+      function next() {
+        let idx;
+        do { idx = Math.floor(Math.random() * msgs.length); } while (idx === last && msgs.length > 1);
+        last = idx;
+        boiShow(msgs[idx]);
+      }
+      next();
+      state.tauntInterval = setInterval(next, interval);
+    }
+    function stopTypingTaunts() {
+      clearInterval(state.tauntInterval);
+      state.tauntInterval = null;
+    }
+
+    async function playIntro() {
+      for (const line of INTRO_LINES) {
+        boiShow(line.text);
+        await delay(line.ms);
+        boiHide();
+        await delay(180);
+      }
+      startGame();
+    }
+
+    // ── Game state ───────────────────────────────────────────────
+    let state = {
+      round: 1,
+      lives: 3,
+      score: 0,
+      phase: 'idle',
+      currentWords: [],
+      submittedWords: [],
+      roundId: 0,
+      typingTimeout: null,
+      tauntInterval: null,
+    };
+
+    // ── Helpers ──────────────────────────────────────────────────
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function pickWords(count, lengths) {
+      const pool = lengths.flatMap(len => WORDS[len] || []);
+      const shuffled = pool.slice().sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, count);
+    }
+
+    function startTimerBar(seconds) {
+      const bar = document.getElementById('timer-bar');
+      bar.style.transition = 'none';
+      bar.style.animation = 'none';
+      bar.style.width = '100%';
+      bar.style.background = '#ffffff';
+      bar.offsetWidth;
+      bar.style.transition = `width ${seconds}s linear`;
+      bar.style.animation = `timer-color ${seconds}s linear forwards`;
+      bar.style.width = '0%';
+    }
+
+    function stopTimerBar() {
+      const bar = document.getElementById('timer-bar');
+      bar.style.transition = 'none';
+      bar.style.animation = 'none';
+      bar.style.width = '0%';
+    }
+
+    function updateHUD() {
+      document.getElementById('round-display').textContent = String(state.round).padStart(2,'0');
+      document.getElementById('score-display').textContent = String(state.score).padStart(2,'0');
+
+      const heartsEl = document.getElementById('hearts');
+      heartsEl.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const span = document.createElement('span');
+        span.className = 'heart' + (i < state.lives ? '' : ' off');
+        const img = document.createElement('img');
+        img.src = './res/img/pixel-heart.png';
+        img.alt = 'heart';
+        span.appendChild(img);
+        heartsEl.appendChild(span);
+      }
+    }
+
+    // ── Game flow ────────────────────────────────────────────────
+    function startGame() {
+      state.round = 1;
+      state.lives = 5;
+      state.score = 0;
+      state.phase = 'idle';
+      state.roundId = 0;
+      updateHUD();
+      startRound();
+    }
+
+    async function startRound() {
+      state.roundId++;
+      const myRoundId = state.roundId;
+      state.phase = 'ready';
+      state.submittedWords = [];
+
+      const config = getRoundConfig(state.round);
+      state.currentWords = pickWords(config.words, config.lengths);
+
+      document.getElementById('typing-area').classList.add('hidden');
+      document.getElementById('submitted-words').innerHTML = '';
+      document.getElementById('correct-words-list').innerHTML = '';
+      document.getElementById('word-input').value = '';
+      stopTimerBar();
+      updateHUD();
+
+      document.getElementById('ready-text').textContent = `ROUND  ${String(state.round).padStart(2,'0')}`;
+      document.getElementById('ready-screen').classList.remove('hidden');
+      boiSay('intro');
+      await delay(2200);
+      if (state.roundId !== myRoundId) return;
+
+      document.getElementById('ready-screen').classList.add('hidden');
+      boiHide();
+      await delay(300);
+      if (state.roundId !== myRoundId) return;
+
+      showWords(myRoundId, config);
+    }
+
+    async function showWords(myRoundId, config) {
+      state.phase = 'showing';
+      updateHUD();
+      const bubble = document.getElementById('boi-bubble');
+
+      for (const word of state.currentWords) {
+        if (state.roundId !== myRoundId) return;
+        bubble.textContent = word.toUpperCase();
+        bubble.classList.add('visible', 'word-display');
+        startTimerBar(config.display);
+        await delay(config.display * 1000);
+        if (state.roundId !== myRoundId) return;
+        bubble.classList.remove('visible', 'word-display');
+        await delay(300);
+      }
+
+      if (state.roundId !== myRoundId) return;
+      startTyping(myRoundId, config);
+    }
+
+    function startTyping(myRoundId, config) {
+      state.phase = 'typing';
+      updateHUD();
+      document.getElementById('typing-area').classList.remove('hidden');
+      document.getElementById('word-input').focus();
+      startTimerBar(config.typing);
+      startTypingTaunts(config.typing);
+
+      state.typingTimeout = setTimeout(() => {
+        if (state.roundId !== myRoundId) return;
+        evaluateRound(myRoundId);
+      }, config.typing * 1000);
+    }
+
+    function submitWord() {
+      const input = document.getElementById('word-input');
+      const typed = input.value.trim().toLowerCase();
+      input.value = '';
+      if (!typed) return;
+
+      if (state.submittedWords.includes(typed)) return;
+
+      const correct = state.currentWords.includes(typed);
+      state.submittedWords.push(typed);
+
+      const pill = document.createElement('span');
+      pill.className = 'submitted-word' + (correct ? ' correct' : '');
+      pill.textContent = typed;
+      document.getElementById('submitted-words').appendChild(pill);
+
+      if (correct) {
+        const entry = document.createElement('span');
+        entry.className = 'correct-word-entry';
+        entry.textContent = typed;
+        document.getElementById('correct-words-list').appendChild(entry);
+      }
+
+      const correctCount = state.submittedWords.filter(w => state.currentWords.includes(w)).length;
+      if (correctCount === state.currentWords.length) {
+        clearTimeout(state.typingTimeout);
+        evaluateRound(state.roundId);
+      }
+    }
+
+    async function evaluateRound(myRoundId) {
+      state.phase = 'eval';
+      updateHUD();
+      stopTimerBar();
+      stopTypingTaunts();
+      document.getElementById('word-input').blur();
+
+      const missed = state.currentWords.filter(w => !state.submittedWords.includes(w));
+      if (missed.length > 0) state.lives -= 1;
+      if (state.lives < 0) state.lives = 0;
+      updateHUD();
+
+      if (missed.length === 0) {
+        boiSay('success');
+      } else {
+        boiSay('partial');
+        const container = document.getElementById('submitted-words');
+        missed.forEach(w => {
+          const pill = document.createElement('span');
+          pill.className = 'submitted-word missed';
+          pill.textContent = w + ' ✗';
+          container.appendChild(pill);
+        });
+      }
+
+      await delay(2500);
+      if (state.roundId !== myRoundId) return;
+
+      if (state.lives <= 0) {
+        gameOver();
+        return;
+      }
+
+      state.score++;
+      state.round++;
+      boiHide();
+      document.getElementById('typing-area').classList.add('hidden');
+      startRound();
+    }
+
+    function gameOver() {
+      state.phase = 'gameover';
+      updateHUD();
+      document.getElementById('typing-area').classList.add('hidden');
+      stopTimerBar();
+      boiSay('gameover');
+      document.getElementById('final-score').innerHTML =
+        `rounds survived&nbsp;&nbsp;<strong>${state.score}</strong>`;
+      document.getElementById('gameover-screen').classList.remove('hidden');
+    }
+
+    document.getElementById('word-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') submitWord();
+    });
+
+    document.getElementById('restart-btn').addEventListener('click', function() {
+      document.getElementById('gameover-screen').classList.add('hidden');
+      boiHide();
+      startGame();
+    });
+
+    document.getElementById('start-btn').addEventListener('click', function() {
+      document.getElementById('start-overlay').style.display = 'none';
+      playIntro();
+    });
+
+    // ── Marquee setup ────────────────────────────────────────────
+    document.fonts.ready.then(function() {
+      const inner = document.querySelector('.marquee-inner');
+      const source = inner.querySelector('span');
+      const containerW = inner.parentElement.offsetWidth;
+      const itemW = source.offsetWidth;
+      const copies = Math.ceil((containerW * 2) / itemW) + 1;
+      for (let i = 1; i < copies; i++) {
+        inner.appendChild(source.cloneNode(true));
+      }
+      inner.style.setProperty('--marquee-offset', `-${itemW}px`);
+      inner.classList.add('ready');
+    });
+  </script>
+</body>
+
+</html>
