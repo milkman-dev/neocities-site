@@ -32,10 +32,6 @@ body {
   overflow: hidden;
 }
 
-.inner-border {
-  display: none;
-}
-
 .scanlines {
   position: absolute;
   inset: 0;
@@ -45,7 +41,7 @@ body {
       rgba(0, 0, 0, 0.18) 3px,
       rgba(0, 0, 0, 0.18) 4px);
   pointer-events: none;
-  z-index: 51;
+  z-index: 65;
 }
 
 /* ── Main row ───────────────────────────── */
@@ -91,37 +87,6 @@ body {
   transform-origin: bottom;
   pointer-events: none;
   z-index: 0;
-}
-
-.char-placeholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  opacity: 0.2;
-  z-index: 1;
-}
-
-.char-figure {
-  width: 130px;
-  height: 200px;
-  border: 2px dashed #ed72ab;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 46px;
-  color: #ed72ab;
-}
-
-.char-placeholder p {
-  font-size: 9px;
-  color: #ed72ab;
-  letter-spacing: 2px;
-  text-align: center;
-  line-height: 2;
 }
 
 #neon-sign {
@@ -263,7 +228,7 @@ body {
 }
 
 .panel-header {
-  background: #fb9974;
+  background: #48c6d2;
   padding: 6px 0;
   font-size: 14px;
   color: #ffffff;
@@ -461,10 +426,6 @@ body {
   position: relative;
 }
 
-#boi-area::before {
-  content: none;
-}
-
 #boi-text-area {
   flex: 1;
   display: flex;
@@ -530,14 +491,14 @@ body {
 }
 
 #ready-eyebrow {
-  font-size: 9px;
-  letter-spacing: 4px;
+  font-size: 16px;
+  letter-spacing: 6px;
   color: rgba(237, 114, 171, 0.5);
   text-transform: uppercase;
 }
 
 #ready-text {
-  font-size: 34px;
+  font-size: 72px;
   color: #ece8ff;
   letter-spacing: 4px;
   text-transform: uppercase;
@@ -586,11 +547,42 @@ body {
 #start-overlay {
   position: absolute;
   inset: 0;
-  background: #1d1b42;
+  background: #0d0b28;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 60;
+  overflow: hidden;
+}
+
+/* Perspective grid floor */
+#start-overlay::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -40%;
+  right: -40%;
+  height: 60%;
+  background:
+    linear-gradient(rgba(0, 210, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.2) 1px, transparent 1px);
+  background-size: 48px 48px;
+  transform: perspective(280px) rotateX(50deg);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+
+/* Horizon glow line */
+#start-overlay::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 38%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.7) 20%, #00d2ff 50%, rgba(0, 210, 255, 0.7) 80%, transparent);
+  box-shadow: 0 0 18px 4px rgba(0, 210, 255, 0.4);
+  pointer-events: none;
 }
 
 #start-box {
@@ -600,8 +592,13 @@ body {
   gap: 16px;
   border: 3px solid #ed72ab;
   padding: 56px 80px;
-  background: #222050;
+  background: rgba(13, 11, 40, 0.82);
+  backdrop-filter: blur(6px);
   position: relative;
+  z-index: 1;
+  box-shadow:
+    0 0 40px rgba(237, 114, 171, 0.15),
+    inset 0 0 30px rgba(0, 0, 0, 0.4);
 }
 
 #start-box::after {
@@ -612,29 +609,28 @@ body {
   pointer-events: none;
 }
 
-#start-eyebrow {
-  font-size: 9px;
-  letter-spacing: 3px;
-  color: rgba(237, 114, 171, 0.5);
-  text-transform: uppercase;
-}
-
 #start-title {
-  font-size: 44px;
-  color: #ece8ff;
-  letter-spacing: 4px;
+  font-size: 52px;
+  letter-spacing: 8px;
   text-transform: lowercase;
   margin-bottom: 14px;
+  color: #ff6bb5;
+  text-shadow:
+    0 0 4px #ff6bb5,
+    0 0 14px #ff6bb5,
+    0 0 28px #ff4da6,
+    0 0 60px rgba(255, 77, 166, 0.4);
+  animation: neon-flicker 6s step-end infinite;
 }
 
 #start-btn {
   font-family: 'DotGothic16', monospace;
-  font-size: 12px;
-  letter-spacing: 3px;
+  font-size: 18px;
+  letter-spacing: 5px;
   color: #ed72ab;
   background: transparent;
   border: 2px solid #ed72ab;
-  padding: 14px 50px;
+  padding: 20px 70px;
   cursor: pointer;
   animation: blink 1.4s step-end infinite;
   text-transform: uppercase;
@@ -648,8 +644,8 @@ body {
 }
 
 #start-hint {
-  font-size: 9px;
-  letter-spacing: 1px;
+  font-size: 14px;
+  letter-spacing: 3px;
   color: rgba(236, 232, 255, 0.2);
   margin-top: 6px;
 }

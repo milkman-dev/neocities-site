@@ -15,7 +15,6 @@
 <body>
 
   <div id="scene">
-    <div class="inner-border"></div>
     <div class="scanlines"></div>
 
     <!-- Main row: char panel + right column -->
@@ -31,8 +30,8 @@
         <div id="title-bar">
           <span id="game-title">ワード記憶ゲーム</span>
           <div id="title-stats">
-            <span>RND&nbsp;<span id="round-display">01</span></span>
-            <span>SCR&nbsp;<span id="score-display">00</span></span>
+            <span>ROUND&nbsp;<span id="round-display">01</span></span>
+            <span>SCORE&nbsp;<span id="score-display">00</span></span>
           </div>
         </div>
 
@@ -94,7 +93,8 @@
 
   </div><!-- /#scene -->
 
-  <audio id="bgm" src="https://raw.githubusercontent.com/milkman-dev/neocities-site/main/res/ogg/minimal-casino.mp3" loop crossorigin="anonymous"></audio>
+  <audio id="bgm" src="https://raw.githubusercontent.com/milkman-dev/neocities-site/main/res/ogg/minimal-casino.mp3"
+    loop crossorigin="anonymous"></audio>
 
   <script>
     // ── Scene scaling ────────────────────────────────────────────
@@ -110,31 +110,54 @@
     // ── Word bank ────────────────────────────────────────────────
     const WORDS = {
       3: ['cat', 'dog', 'sun', 'run', 'fly', 'map', 'pen', 'cup', 'hat', 'red', 'box', 'net', 'fog', 'jam', 'hug', 'oak', 'dew', 'owl', 'gem', 'axe',
-        'bay', 'bid', 'bun', 'cob', 'cod', 'cog', 'dam', 'din', 'dip', 'dot', 'dub', 'dug', 'elm', 'emu', 'eon', 'era', 'eve', 'ewe', 'fan', 'fat',
-        'fib', 'fin', 'fit', 'fix', 'foe', 'fun', 'gap', 'gas', 'gel', 'gin', 'gnu', 'gum', 'gut', 'hay', 'hem', 'hen', 'hex', 'hid', 'him', 'hip',
-        'hob', 'hog', 'hop', 'hub', 'hue', 'hut', 'ice', 'imp', 'ink', 'inn', 'ion', 'ire', 'ivy', 'jab', 'jag', 'jar', 'jaw', 'jay', 'jet', 'jig'],
+        'bay', 'bid', 'bun', 'dam', 'din', 'dip', 'dot', 'dub', 'dug', 'eel', 'elm', 'era', 'eve', 'fan', 'fat', 'fib', 'fin', 'fit', 'fix', 'foe',
+        'fun', 'gap', 'gas', 'gel', 'gin', 'gum', 'gut', 'hay', 'hem', 'hen', 'hex', 'hid', 'him', 'hip', 'hog', 'hop', 'hub', 'hue', 'hut',
+        'ice', 'imp', 'ink', 'inn', 'ivy', 'jab', 'jar', 'jaw', 'jay', 'jet', 'jig',
+        'coy', 'shy', 'sly', 'sin', 'raw', 'hot', 'cue', 'nab', 'ode', 'orb', 'paw', 'pod', 'pub', 'rag', 'ram', 'rap', 'rib', 'rid', 'rob', 'rot',
+        'rub', 'rum', 'rut', 'sap', 'ski', 'sky', 'sob', 'spa', 'spy', 'tab', 'tan', 'tap', 'tar', 'tee', 'tie', 'tin', 'tip', 'toe', 'top', 'toy',
+        'tub', 'tug', 'van', 'vex', 'vow', 'wax', 'wig', 'wit', 'yak', 'yam', 'zap', 'zip'],
       4: ['lamp', 'bird', 'rain', 'cold', 'fish', 'dark', 'moon', 'tree', 'wind', 'dust', 'frog', 'leaf', 'pond', 'star', 'wolf', 'bell', 'cave',
         'dove', 'fern', 'kite', 'barn', 'bear', 'boat', 'bone', 'boot', 'bowl', 'brew', 'brow', 'buck', 'bull', 'burp', 'bush', 'buzz', 'cake',
-        'calf', 'calm', 'camp', 'cane', 'card', 'cart', 'cave', 'clay', 'clip', 'clog', 'club', 'coal', 'coat', 'coin', 'colt', 'comb', 'cone',
-        'cord', 'cork', 'corn', 'crab', 'crop', 'crow', 'curl', 'damp', 'dart', 'dawn', 'deer', 'dent', 'dew', 'dial', 'dirt', 'dish', 'dome',
-        'door', 'dove', 'draw', 'drum', 'dusk', 'earl', 'east', 'echo', 'edge', 'eel', 'eggs', 'epic', 'fawn', 'felt', 'fern', 'film', 'flag'],
+        'calf', 'calm', 'camp', 'cane', 'card', 'cart', 'clay', 'clip', 'clog', 'club', 'coal', 'coat', 'coin', 'colt', 'comb', 'cone',
+        'cord', 'cork', 'corn', 'crab', 'crop', 'crow', 'curl', 'damp', 'dart', 'dawn', 'deer', 'dent', 'dial', 'dirt', 'dish', 'dome',
+        'door', 'draw', 'drum', 'dusk', 'earl', 'east', 'echo', 'edge', 'eggs', 'epic', 'fawn', 'felt', 'film', 'flag',
+        'lust', 'lure', 'burn', 'ache', 'want', 'heat', 'wild', 'bare', 'silk', 'sway', 'purr', 'bite', 'dare', 'gaze', 'pout', 'sigh', 'wink',
+        'taut', 'limp', 'veil', 'prey', 'coax', 'lull', 'smug', 'vain', 'lair', 'daze', 'ruse', 'fade', 'fury', 'glow', 'grin', 'lurk',
+        'melt', 'omen', 'pang', 'rage', 'roam', 'ruin', 'rust', 'saga', 'seal', 'snap', 'soul', 'scar', 'stem', 'sulk', 'tame', 'thaw',
+        'tide', 'tome', 'trap', 'void', 'wane', 'warp', 'wilt', 'wisp', 'howl', 'haze', 'grip', 'gust', 'loom', 'envy'],
       5: ['ocean', 'light', 'dream', 'cloud', 'flame', 'stone', 'river', 'crane', 'frost', 'bloom', 'grape', 'honey', 'ivory', 'jewel', 'lemon',
-        'maple', 'noble', 'olive', 'pearl', 'quilt', 'rebel', 'shrub', 'tiger', 'umbra', 'viola', 'waltz', 'xenon', 'yacht', 'zebra', 'abbey',
+        'maple', 'noble', 'olive', 'pearl', 'quilt', 'rebel', 'shrub', 'tiger', 'viola', 'waltz', 'yacht', 'zebra', 'abbey',
         'acorn', 'adore', 'agile', 'album', 'aloft', 'amber', 'amble', 'angel', 'ankle', 'anvil', 'apron', 'arbor', 'ardor', 'arrow', 'attic',
-        'bacon', 'badge', 'bagel', 'baker', 'banjo', 'basic', 'basil', 'batch', 'beech', 'bench', 'berry', 'bevel', 'birch', 'bison', 'black',
-        'blade', 'bland', 'blank', 'blast', 'blaze', 'bleak', 'blend', 'bless', 'bliss', 'block', 'blood', 'bloom', 'blown', 'blunt', 'blurt'],
+        'bacon', 'badge', 'bagel', 'baker', 'banjo', 'basic', 'basil', 'batch', 'beech', 'bench', 'berry', 'birch', 'bison', 'black',
+        'blade', 'bland', 'blank', 'blast', 'blaze', 'bleak', 'blend', 'bless', 'bliss', 'block', 'blood', 'blown', 'blunt', 'blurt',
+        'tease', 'tempt', 'blush', 'swoon', 'crave', 'charm', 'sheer', 'satin', 'flush', 'taste', 'touch', 'stare', 'graze', 'pulse', 'siren',
+        'sleek', 'slink', 'taper', 'lofty', 'wield', 'alloy', 'brood', 'chasm', 'covet', 'crest', 'crush', 'curve', 'delve', 'drift',
+        'drown', 'eerie', 'ember', 'epoch', 'erode', 'exile', 'fable', 'feral', 'fever', 'fiend', 'filth', 'flare', 'flesh', 'flair',
+        'flint', 'fluke', 'forge', 'frail', 'ghost', 'glare', 'gleam', 'gloom', 'gloss', 'grace', 'grasp', 'grief', 'groan',
+        'kneel', 'lapse', 'latch', 'linen', 'manor', 'marsh', 'might', 'mirth', 'mourn', 'peril', 'comet', 'taunt', 'smirk', 'snare', 'sting', 'strut', 'haunt'],
       6: ['candle', 'forest', 'garden', 'breeze', 'castle', 'dragon', 'falcon', 'island', 'jungle', 'kitten', 'meadow', 'nectar', 'pebble',
         'rabbit', 'sunset', 'throne', 'velvet', 'walnut', 'zenith', 'beacon', 'anchor', 'antler', 'ardent', 'armory', 'artery', 'artist',
         'autumn', 'awning', 'bamboo', 'barrel', 'basket', 'battle', 'bellow', 'bitter', 'blazer', 'blouse', 'border', 'bottle', 'bounce',
         'bounty', 'bridge', 'bridle', 'bronze', 'bucket', 'bundle', 'burrow', 'butter', 'button', 'cactus', 'canopy', 'canvas', 'carpet',
-        'carrot', 'cavern', 'cellar', 'cement', 'center', 'cermet', 'chapel', 'charge', 'cherry', 'chisel', 'cinder', 'circle', 'citrus',
-        'clamor', 'clover', 'cobble', 'coffee', 'column', 'combat', 'comet', 'copper', 'corner', 'cotton', 'cradle', 'crater', 'crimson'],
+        'carrot', 'cavern', 'cellar', 'cement', 'center', 'chapel', 'charge', 'cherry', 'chisel', 'cinder', 'circle', 'citrus',
+        'clamor', 'clover', 'cobble', 'coffee', 'column', 'combat', 'copper', 'corner', 'cotton', 'cradle', 'crater',
+        'allure', 'desire', 'sultry', 'tender', 'silken', 'linger', 'tangle', 'please', 'beckon', 'entice', 'hunger', 'thirst', 'wicked', 'fervor',
+        'sinful', 'caress', 'ravish', 'devour', 'tether', 'simmer', 'shiver', 'danger', 'daring', 'deceit', 'demure', 'devout',
+        'elicit', 'feline', 'flaunt', 'forbid', 'gamble', 'glamor', 'grotto', 'hasten', 'herald', 'hidden', 'hinder', 'hustle',
+        'ignite', 'jester', 'kindle', 'lament', 'lavish', 'mantle', 'mirror', 'mystic', 'ornate', 'outlaw', 'pardon', 'parlor', 'patron',
+        'lustre', 'malice', 'fringe', 'embody', 'falter'],
       7: ['blanket', 'chimney', 'dolphin', 'feather', 'glacier', 'harvest', 'lantern', 'monster', 'octopus', 'pilgrim', 'rainbow', 'shelter',
         'tornado', 'volcano', 'weather', 'fiction', 'impulse', 'journey', 'knights', 'magical', 'abandon', 'absolve', 'account', 'accused',
-        'acrobat', 'admiral', 'advance', 'affable', 'ailment', 'aileron', 'airlock', 'almanac', 'alphorn', 'ambient', 'ambling', 'amended',
-        'ancient', 'another', 'antique', 'anxiety', 'armored', 'arousal', 'arsenal', 'ascetic', 'ashamed', 'asunder', 'audible', 'balance',
+        'acrobat', 'admiral', 'advance', 'affable', 'ailment', 'airlock', 'ambient', 'ambling', 'amended',
+        'ancient', 'another', 'antique', 'anxiety', 'armored', 'arousal', 'arsenal', 'ashamed', 'asunder', 'audible', 'balance',
         'baffled', 'barrage', 'battery', 'bedroom', 'benefit', 'beneath', 'blossom', 'boulder', 'bowling', 'bracket', 'breadth', 'brewing',
-        'cabinet', 'captain', 'careful', 'cascade', 'cavalry', 'ceiling', 'charged', 'charity', 'chapter', 'classic', 'climate', 'cluster']
+        'cabinet', 'captain', 'careful', 'cascade', 'cavalry', 'ceiling', 'charged', 'charity', 'chapter', 'classic', 'climate', 'cluster',
+        'longing', 'craving', 'passion', 'sensual', 'whisper', 'shudder', 'tremble', 'beguile', 'enchant', 'wistful', 'devious', 'furtive',
+        'hunting', 'glisten', 'smother', 'swindle', 'unravel', 'villain', 'crimson', 'darling', 'obscure', 'possess',
+        'caution', 'comrade', 'crumble', 'cunning', 'curtain', 'deceive', 'defiant', 'descent', 'destiny', 'devoted',
+        'discord', 'dismiss', 'distant', 'distort', 'disturb', 'divulge', 'dormant', 'eclipse', 'elegant', 'emerald',
+        'ensnare', 'eternal', 'evasive', 'exhaust', 'fantasy', 'fatigue', 'fervent', 'flicker', 'forsake',
+        'smolder', 'cherish', 'bewitch', 'swelter']
     };
 
     // ── Round config ─────────────────────────────────────────────
@@ -280,11 +303,6 @@
       { text: "...ready when you are", ms: 2000 },
     ];
 
-    const PHASE_LABELS = {
-      idle: '--', ready: '準備中', showing: '表示中',
-      typing: '入力中', eval: '評価中', gameover: '終了'
-    };
-
     function boiSay(category) {
       const msgs = BOI_MESSAGES[category];
       const msg = msgs[Math.floor(Math.random() * msgs.length)];
@@ -326,8 +344,6 @@
     }
 
     function stopTypingTaunts() {
-      clearInterval(state.tauntInterval);
-      state.tauntInterval = null;
       clearTimeout(state.tauntTimeout);
       state.tauntTimeout = null;
       clearTimeout(state.idleTimeout);
@@ -369,7 +385,7 @@
     // ── Game state ───────────────────────────────────────────────
     let state = {
       round: 1,
-      lives: 3,
+      lives: 5,
       score: 0,
       phase: 'idle',
       currentWords: [],
@@ -377,7 +393,6 @@
       roundId: 0,
       typingTimeout: null,
       typingSeconds: 0,
-      tauntInterval: null,
       tauntTimeout: null,
       idleTimeout: null,
       typewriterTimer: null,
