@@ -23,7 +23,7 @@
       <div id="char-panel">
         <a id="close-btn" href="./home.html">EXIT ×</a>
         <div id="neon-sign">記憶の楽園</div>
-        <img src="./res/img/succubus-oc.png" alt="character sprite" id="char-sprite" />
+        <img src="./res/img/succubus-4.png" alt="character sprite" id="char-sprite" />
       </div>
 
       <div id="game-panel">
@@ -303,18 +303,129 @@
       { text: "...ready when you are", ms: 2000 },
     ];
 
+    // ── Sprite animation ─────────────────────────────────────────
+    const TALK_FRAMES = [
+      './res/img/speak/succubus-1.png',
+      './res/img/speak/succubus-2.png',
+      './res/img/speak/succubus-3.png',
+      './res/img/speak/succubus-4.png',
+    ];
+    const BLINK_FRAMES = [
+      './res/img/blink/succubus-4.png',
+      './res/img/blink/succubus-5.png',
+      './res/img/blink/succubus-6.png',
+      './res/img/blink/succubus-7.png',
+      './res/img/blink/succubus-8.png',
+      './res/img/blink/succubus-7.png',
+      './res/img/blink/succubus-6.png',
+      './res/img/blink/succubus-5.png',
+    ];
+    let talkAnimInterval = null;
+    let talkAnimFrame = 0;
+    let blinkTimeout = null;
+    let blinkAnim = null;
+
+    function setSprite(src) {
+      document.getElementById('char-sprite').src = src;
+    }
+
+    function scheduleBlink(soon = false) {
+      clearTimeout(blinkTimeout);
+      const delay = soon
+        ? 200 + Math.random() * 400
+        : 2000 + Math.random() * 2000;
+      blinkTimeout = setTimeout(playBlink, delay);
+    }
+    function cancelBlink() {
+      clearTimeout(blinkTimeout);
+      blinkTimeout = null;
+      if (blinkAnim) { clearInterval(blinkAnim); blinkAnim = null; }
+    }
+    function playBlink() {
+      blinkTimeout = null;
+      if (talkAnimInterval) { scheduleBlink(); return; }
+      let frame = 0;
+      blinkAnim = setInterval(() => {
+        setSprite(BLINK_FRAMES[frame]);
+        frame++;
+        if (frame >= BLINK_FRAMES.length) {
+          clearInterval(blinkAnim);
+          blinkAnim = null;
+          setSprite('./res/img/succubus-4.png');
+          scheduleBlink();
+        }
+      }, 50);
+    }
+
+    function startTalkAnim() {
+      if (talkAnimInterval) return;
+      cancelBlink();
+      talkAnimFrame = 0;
+      talkAnimInterval = setInterval(() => {
+        setSprite(TALK_FRAMES[talkAnimFrame % TALK_FRAMES.length]);
+        talkAnimFrame++;
+      }, 120);
+    }
+    function stopTalkAnim(endSprite = './res/img/succubus-4.png') {
+      if (talkAnimInterval) {
+        clearInterval(talkAnimInterval);
+        talkAnimInterval = null;
+      }
+      setSprite(endSprite);
+      scheduleBlink(Math.random() < 0.4);
+    }
+    function playTalkAnimOnce(loops = 2, frameMs = 200) {
+      if (talkAnimInterval) {
+        clearInterval(talkAnimInterval);
+        talkAnimInterval = null;
+      }
+      cancelBlink();
+      talkAnimFrame = 0;
+      const totalFrames = TALK_FRAMES.length * loops;
+      talkAnimInterval = setInterval(() => {
+        setSprite(TALK_FRAMES[talkAnimFrame % TALK_FRAMES.length]);
+        talkAnimFrame++;
+        if (talkAnimFrame >= totalFrames) {
+          clearInterval(talkAnimInterval);
+          talkAnimInterval = null;
+          setSprite('./res/img/succubus-4.png');
+          scheduleBlink(Math.random() < 0.4);
+        }
+      }, frameMs);
+    }
+
     function boiSay(category) {
+      if (state.typewriterTimer) {
+        clearTimeout(state.typewriterTimer);
+        state.typewriterTimer = null;
+      }
+      const endSprite = category === 'success'
+        ? './res/img/succubus-1.png'
+        : './res/img/succubus-4.png';
+      startTalkAnim();
       const msgs = BOI_MESSAGES[category];
       const msg = msgs[Math.floor(Math.random() * msgs.length)];
       const bubble = document.getElementById('boi-bubble');
-      bubble.textContent = msg;
+      bubble.textContent = '';
       bubble.classList.add('visible');
+      let i = 0;
+      function tick() {
+        if (i < msg.length) {
+          bubble.textContent += msg[i++];
+          state.typewriterTimer = setTimeout(tick, 28);
+        } else {
+          state.typewriterTimer = null;
+          stopTalkAnim(endSprite);
+        }
+      }
+      tick();
     }
     function boiShow(text) {
       if (state.typewriterTimer) {
         clearTimeout(state.typewriterTimer);
         state.typewriterTimer = null;
       }
+      stopTalkAnim();
       const bubble = document.getElementById('boi-bubble');
       bubble.textContent = text;
       bubble.classList.add('visible');
@@ -325,6 +436,7 @@
         clearTimeout(state.typewriterTimer);
         state.typewriterTimer = null;
       }
+      startTalkAnim();
       const bubble = document.getElementById('boi-bubble');
       bubble.textContent = '';
       bubble.classList.add('visible');
@@ -335,11 +447,13 @@
           state.typewriterTimer = setTimeout(tick, 28);
         } else {
           state.typewriterTimer = null;
+          stopTalkAnim();
         }
       }
       tick();
     }
     function boiHide() {
+      stopTalkAnim();
       document.getElementById('boi-bubble').classList.remove('visible');
     }
 
@@ -374,7 +488,7 @@
 
     async function playIntro() {
       for (const line of INTRO_LINES) {
-        boiShow(line.text);
+        boiTypewrite(line.text);
         await delay(line.ms);
         boiHide();
         await delay(180);
@@ -494,9 +608,11 @@
       updateHUD();
 
       document.getElementById('ready-text').textContent = `ROUND  ${String(state.round).padStart(2, '0')}`;
-      document.getElementById('ready-screen').classList.remove('hidden');
       boiSay('intro');
-      await delay(2200);
+      await delay(800);
+      if (state.roundId !== myRoundId) return;
+      document.getElementById('ready-screen').classList.remove('hidden');
+      await delay(1600);
       if (state.roundId !== myRoundId) return;
 
       document.getElementById('ready-screen').classList.add('hidden');
@@ -516,10 +632,12 @@
         if (state.roundId !== myRoundId) return;
         bubble.textContent = word.toUpperCase().split('').join(' ');
         bubble.classList.add('visible', 'word-display');
+        playTalkAnimOnce(word.length <= 6 ? 1 : 2, 200);
         startTimerBar(config.display);
         await delay(config.display * 1000);
         if (state.roundId !== myRoundId) return;
         bubble.classList.remove('visible', 'word-display');
+        stopTalkAnim();
         await delay(300);
       }
 
@@ -535,6 +653,7 @@
       state.typingSeconds = config.typing;
       startTimerBar(config.typing);
       boiShow('...');
+      scheduleBlink();
       resetIdleTimer();
 
       state.typingTimeout = setTimeout(() => {
@@ -624,12 +743,13 @@
       startRound();
     }
 
-    function gameOver() {
+    async function gameOver() {
       state.phase = 'gameover';
       updateHUD();
       document.getElementById('typing-area').classList.add('hidden');
       stopTimerBar();
       boiSay('gameover');
+      await delay(2000);
       document.getElementById('final-score').innerHTML =
         `rounds survived&nbsp;&nbsp;<strong>${state.score}</strong>`;
       document.getElementById('gameover-screen').classList.remove('hidden');
@@ -677,6 +797,9 @@
       bgm.play();
       playIntro();
     });
+
+    [...TALK_FRAMES, ...BLINK_FRAMES].forEach(src => { new Image().src = src; });
+    scheduleBlink();
 
     // ── Marquee setup ────────────────────────────────────────────
     document.fonts.ready.then(function () {
