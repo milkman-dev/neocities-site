@@ -23,7 +23,8 @@
       <div id="char-panel">
         <a id="close-btn" href="./home.html">EXIT ×</a>
         <div id="neon-sign">記憶の楽園</div>
-        <img src="./res/img/succubus-4.png" alt="character sprite" id="char-sprite" />
+        <img src="./res/img/blink/succubus-4.png" alt="character sprite" id="char-sprite" />
+        <img src="./res/img/sweat-overlay.png" alt="" id="sweat-overlay" />
       </div>
 
       <div id="game-panel">
@@ -64,17 +65,27 @@
 
     </div><!-- /#main-row -->
 
-    <div id="boi-area">
-      <div id="boi-text-area">
-        <span id="boi-arrow">▶</span>
-        <div id="boi-bubble"></div><span class="cursor"></span>
+    <div id="char-area">
+      <div id="char-text-area">
+        <span id="char-arrow">▶</span>
+        <div id="char-bubble"></div><span class="cursor"></span>
       </div>
+      <button id="skip-intro-btn" class="hidden">skip ▶▶</button>
     </div>
 
     <!-- Overlays — absolute, cover whole scene -->
-    <div id="ready-screen" class="hidden">
+    <div id="ready-screen">
       <div id="ready-eyebrow">get ready</div>
-      <span id="ready-text">ROUND 01</span>
+      <div id="ready-text">
+        <span class="ready-digit" id="ready-digit-tens">0</span><span class="ready-digit" id="ready-digit-ones">1</span>
+      </div>
+      <div id="ready-hint"></div>
+      <div id="ready-recap">
+        <span id="ready-score"></span>
+        <span id="ready-lives"></span>
+      </div>
+      <div id="ready-taunt"></div>
+      <div id="ready-choices"></div>
     </div>
 
     <div id="gameover-screen" class="hidden">
@@ -183,19 +194,21 @@
       };
     }
 
-    // ── Little Boi messages ──────────────────────────────────────
-    const BOI_MESSAGES = {
+    // ── Succubus messages ────────────────────────────────────────
+    const CHAR_MESSAGES = {
       intro: [
         "eyes on the table",
         "try not to disappoint me",
         "pay attention this time",
         "don't blink",
-      ],
-      showing: [
-        "...",
-        "focus",
-        "are you watching",
-        "keep up",
+        "let's see what you've got",
+        "this one won't be easy~",
+        "ready or not",
+        "show me something",
+        "another round... another chance",
+        "still here? good",
+        "concentrate",
+        "watch closely now",
       ],
       typing: [
         "hmm",
@@ -246,6 +259,16 @@
         "don't look so pleased with yourself",
         "...i'll admit... that was decent",
         "you can stay another round",
+        "...fine you earned that one",
+        "okay... that was actually good",
+        "better than i expected~",
+        "careful... you're starting to impress me",
+        "...well then",
+        "that works",
+        "i won't say it twice... but well done",
+        "you remembered all of them? hm~",
+        "don't make a habit of surprising me",
+        "...acceptable",
       ],
       partial: [
         "so close... and yet",
@@ -254,6 +277,10 @@
         "disappointing... but fixable",
         "not quite little one",
         "i expected more... try again",
+        "you were doing so well...",
+        "that last one slipped didn't it",
+        "close... but close doesn't count here",
+        "i had faith in you... misplaced it seems",
       ],
       idle: [
         "...are you going to play or just sit there",
@@ -279,6 +306,15 @@
         "not bad",
         "i'll allow it",
         "one down",
+        "...yes",
+        "there it is",
+        "keep going",
+        "that one counts",
+        "mmh",
+        "...noted",
+        "right~",
+        "you got one",
+        "i see you",
       ],
       wrong: [
         "no",
@@ -289,6 +325,94 @@
         "not even close",
         "wrong",
         "that wasn't one of them",
+      ],
+      choice_mercy: [
+        "mercy~ how adorable",
+        "mercy is for the weak... good luck~",
+        "...mercy, fine, it begins",
+        "hm~ mercy noted, now focus",
+        "i'll remember you asked that~",
+        "cute... the words don't care~",
+      ],
+      choice_slow: [
+        "slow down? oh, no no~",
+        "the pace is mine to decide~",
+        "slow down... i'll think about it, now go",
+        "...you're not in charge here",
+        "cute request, ready anyway",
+        "slow? sure, watch closely then~",
+      ],
+      choice_nice: [
+        "nice? ...we'll see",
+        "i'm always nice~ now pay attention",
+        "...define nice, go",
+        "nice... isn't really my thing~",
+        "i'll try~ no promises",
+        "...i'll consider it, eyes forward",
+      ],
+      choice_ready: [
+        "good, then let's not waste it~",
+        "finally... watch closely.",
+        "...we'll see about that",
+        "bold, i like it",
+        "hm, don't disappoint me~",
+        "that's what they all say",
+      ],
+      choice_scared: [
+        "scared? good... pay attention then",
+        "...fear is useful, use it",
+        "hm~ that's honest at least",
+        "don't be scared... be focused~",
+        "good, now remember every word",
+        "scared is fine... forgetting isn't~",
+      ],
+      choice_quit: [
+        "...quit, really?",
+        "no",
+        "you can leave anytime~ but you won't",
+        "...interesting, the round starts anyway",
+        "cute bluff, ready?",
+        "quitting would be so boring~",
+      ],
+      choice_not_ready: [
+        "too bad~",
+        "...noted, still starting",
+        "ready is a mindset, you'll manage",
+        "the words don't wait~",
+        "you'll be fine, probably~",
+        "...neither am i, but here we are",
+      ],
+      choice_hint: [
+        "a hint~ how sweet... no",
+        "hints are for the indecisive~",
+        "...the words are the hint",
+        "watch, that's the only hint you get",
+        "hm, i admire the audacity... no",
+        "no hints, just attention~",
+      ],
+      choice_win: [
+        "win? ...interesting question~",
+        "you get to keep playing, isn't that enough~",
+        "you get my respect, which is rare~",
+        "bragging rights, nothing more~",
+        "...we'll discuss that if it happens",
+        "let's see if it comes to that~",
+      ],
+      choice_fair: [
+        "fair? no one said it would be~",
+        "...fair is a funny word here",
+        "life isn't fair, neither I am~",
+        "the rules are simple, fairness is irrelevant",
+        "...you're right, it isn't, go",
+        "fair~ hmm no",
+      ],
+      choice_tough: [
+        "...sure, tough",
+        "hmm, we'll test that~",
+        "don't let the nerves show~",
+        "bold, i'll remember that~",
+        "good, then focus",
+        "tough enough to remember all of them?~",
       ],
     };
 
@@ -351,7 +475,7 @@
         if (frame >= BLINK_FRAMES.length) {
           clearInterval(blinkAnim);
           blinkAnim = null;
-          setSprite('./res/img/succubus-4.png');
+          setSprite('./res/img/blink/succubus-4.png');
           scheduleBlink();
         }
       }, 50);
@@ -366,7 +490,7 @@
         talkAnimFrame++;
       }, 120);
     }
-    function stopTalkAnim(endSprite = './res/img/succubus-4.png') {
+    function stopTalkAnim(endSprite = './res/img/blink/succubus-4.png') {
       if (talkAnimInterval) {
         clearInterval(talkAnimInterval);
         talkAnimInterval = null;
@@ -388,56 +512,71 @@
         if (talkAnimFrame >= totalFrames) {
           clearInterval(talkAnimInterval);
           talkAnimInterval = null;
-          setSprite('./res/img/succubus-4.png');
+          setSprite('./res/img/blink/succubus-4.png');
           scheduleBlink(Math.random() < 0.4);
         }
       }, frameMs);
     }
 
-    function boiSay(category) {
+    // ── Shuffle-bag: avoids repeating the same phrase twice in a row.
+    // Tracks last used index per category; picks randomly from the rest.
+    const _msgLastIdx = {};
+    function pickMessage(category) {
+      const msgs = CHAR_MESSAGES[category];
+      if (msgs.length === 1) return msgs[0];
+      const last = _msgLastIdx[category];
+      const pool = msgs.map((m, i) => i).filter(i => i !== last);
+      const chosen = pool[Math.floor(Math.random() * pool.length)];
+      _msgLastIdx[category] = chosen;
+      return msgs[chosen];
+    }
+
+    function charSay(category) {
       if (state.typewriterTimer) {
         clearTimeout(state.typewriterTimer);
         state.typewriterTimer = null;
       }
       const endSprite = category === 'success'
-        ? './res/img/succubus-1.png'
-        : './res/img/succubus-4.png';
+        ? './res/img/speak/succubus-1.png'
+        : './res/img/blink/succubus-4.png';
       startTalkAnim();
-      const msgs = BOI_MESSAGES[category];
-      const msg = msgs[Math.floor(Math.random() * msgs.length)];
-      const bubble = document.getElementById('boi-bubble');
+      const msg = pickMessage(category);
+      const bubble = document.getElementById('char-bubble');
       bubble.textContent = '';
       bubble.classList.add('visible');
       let i = 0;
-      function tick() {
-        if (i < msg.length) {
-          bubble.textContent += msg[i++];
-          state.typewriterTimer = setTimeout(tick, 28);
-        } else {
-          state.typewriterTimer = null;
-          stopTalkAnim(endSprite);
+      return new Promise(resolve => {
+        function tick() {
+          if (i < msg.length) {
+            bubble.textContent += msg[i++];
+            state.typewriterTimer = setTimeout(tick, 28);
+          } else {
+            state.typewriterTimer = null;
+            stopTalkAnim(endSprite);
+            resolve();
+          }
         }
-      }
-      tick();
+        tick();
+      });
     }
-    function boiShow(text) {
+    function charShow(text) {
       if (state.typewriterTimer) {
         clearTimeout(state.typewriterTimer);
         state.typewriterTimer = null;
       }
       stopTalkAnim();
-      const bubble = document.getElementById('boi-bubble');
+      const bubble = document.getElementById('char-bubble');
       bubble.textContent = text;
       bubble.classList.add('visible');
     }
 
-    function boiTypewrite(text) {
+    function charTypewrite(text) {
       if (state.typewriterTimer) {
         clearTimeout(state.typewriterTimer);
         state.typewriterTimer = null;
       }
       startTalkAnim();
-      const bubble = document.getElementById('boi-bubble');
+      const bubble = document.getElementById('char-bubble');
       bubble.textContent = '';
       bubble.classList.add('visible');
       let i = 0;
@@ -452,9 +591,9 @@
       }
       tick();
     }
-    function boiHide() {
+    function charHide() {
       stopTalkAnim();
-      document.getElementById('boi-bubble').classList.remove('visible');
+      document.getElementById('char-bubble').classList.remove('visible');
     }
 
     function stopTypingTaunts() {
@@ -469,8 +608,7 @@
       state.tauntTimeout = setTimeout(() => {
         state.tauntTimeout = null;
         if (state.phase === 'typing') {
-          const msgs = BOI_MESSAGES.typing;
-          boiTypewrite(msgs[Math.floor(Math.random() * msgs.length)]);
+          charTypewrite(pickMessage('typing'));
           resetIdleTimer();
         }
       }, 5000);
@@ -480,19 +618,50 @@
       clearTimeout(state.idleTimeout);
       state.idleTimeout = setTimeout(() => {
         if (state.phase !== 'typing') return;
-        const msgs = BOI_MESSAGES.idle;
-        boiTypewrite(msgs[Math.floor(Math.random() * msgs.length)]);
+        charTypewrite(pickMessage('idle'));
         resetIdleTimer();
       }, 9000);
     }
 
+    let introSkipped = false;
+    let _skipResolve = null;
+    let _skipTimer = null;
+
+    function delayOrSkip(ms) {
+      return new Promise(resolve => {
+        _skipResolve = resolve;
+        _skipTimer = setTimeout(resolve, ms);
+      });
+    }
+
     async function playIntro() {
-      for (const line of INTRO_LINES) {
-        boiTypewrite(line.text);
-        await delay(line.ms);
-        boiHide();
-        await delay(180);
+      introSkipped = false;
+      document.getElementById('skip-intro-btn').classList.remove('hidden');
+
+      function onSkip() {
+        introSkipped = true;
+        if (state.typewriterTimer) {
+          clearTimeout(state.typewriterTimer);
+          state.typewriterTimer = null;
+        }
+        clearTimeout(_skipTimer); _skipTimer = null;
+        if (_skipResolve) { _skipResolve(); _skipResolve = null; }
       }
+      document.addEventListener('keydown', onSkip);
+      document.getElementById('skip-intro-btn').addEventListener('click', onSkip);
+
+      for (const line of INTRO_LINES) {
+        if (introSkipped) break;
+        charTypewrite(line.text);
+        await delayOrSkip(line.ms);
+        if (introSkipped) break;
+        charHide();
+        await delayOrSkip(180);
+      }
+
+      document.removeEventListener('keydown', onSkip);
+      document.getElementById('skip-intro-btn').classList.add('hidden');
+      charHide();
       startGame();
     }
 
@@ -518,8 +687,11 @@
 
     function pickWords(count, lengths) {
       const pool = lengths.flatMap(len => WORDS[len] || []);
-      const shuffled = pool.slice().sort(() => Math.random() - 0.5);
-      return shuffled.slice(0, count);
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      return pool.slice(0, count);
     }
 
     function startTimerBar(seconds) {
@@ -551,9 +723,11 @@
       const newFraction = Math.max(0, currentFraction - 0.08);
       const remainingSeconds = newFraction * state.typingSeconds;
       bar.style.transition = 'none';
+      bar.style.animation = 'none';
       bar.style.width = (newFraction * 100) + '%';
       bar.offsetWidth;
       bar.style.transition = `width ${remainingSeconds}s linear`;
+      bar.style.animation = `timer-color ${remainingSeconds}s linear forwards`;
       bar.style.width = '0%';
       clearTimeout(state.typingTimeout);
       const myRoundId = state.roundId;
@@ -569,9 +743,11 @@
 
       const heartsEl = document.getElementById('hearts');
       heartsEl.innerHTML = '';
+      const heartGlow = state.lives <= 3;
       for (let i = 0; i < 5; i++) {
         const span = document.createElement('span');
-        span.className = 'heart' + (i < state.lives ? '' : ' off');
+        const active = i < state.lives;
+        span.className = 'heart' + (active ? '' : ' off') + (active && heartGlow ? ' glow' : '');
         const img = document.createElement('img');
         img.src = './res/img/pixel-heart.png';
         img.alt = 'heart';
@@ -580,8 +756,147 @@
       }
     }
 
+    // ── Ready-screen helpers ─────────────────────────────────────
+    function showReadyScreen() {
+      const el = document.getElementById('ready-screen');
+      el.classList.remove('ready-exit');
+      el.classList.add('ready-enter');
+      const scanlines = document.querySelector('.scanlines');
+      scanlines.classList.remove('crt-flash');
+      scanlines.offsetWidth; // force reflow so animation restarts
+      scanlines.classList.add('crt-flash');
+      setTimeout(() => scanlines.classList.remove('crt-flash'), 600);
+    }
+
+    function hideReadyScreen() {
+      return new Promise(resolve => {
+        const el = document.getElementById('ready-screen');
+        el.classList.remove('ready-enter');
+        el.classList.add('ready-exit');
+        const fallback = setTimeout(() => { el.classList.remove('ready-exit'); resolve(); }, 500);
+        el.addEventListener('animationend', function handler() {
+          el.removeEventListener('animationend', handler);
+          clearTimeout(fallback);
+          el.classList.remove('ready-exit');
+          resolve();
+        }, { once: true });
+      });
+    }
+
+    function spinToDigits(targetNumber) {
+      return new Promise(resolve => {
+        const str = String(targetNumber).padStart(2, '0');
+        const tens = document.getElementById('ready-digit-tens');
+        const ones = document.getElementById('ready-digit-ones');
+        const totalDuration = 750;
+        let elapsed = 0;
+        let interval = 48;
+        function tick() {
+          const progress = elapsed / totalDuration;
+          if (progress < 0.7) tens.textContent = Math.floor(Math.random() * 10);
+          else tens.textContent = str[0];
+          if (progress < 0.88) ones.textContent = Math.floor(Math.random() * 10);
+          else ones.textContent = str[1];
+          elapsed += interval;
+          interval = Math.min(48 + progress * 160, 200);
+          if (elapsed >= totalDuration) {
+            tens.textContent = str[0];
+            ones.textContent = str[1];
+            resolve();
+          } else {
+            setTimeout(tick, interval);
+          }
+        }
+        tick();
+      });
+    }
+
+    function populateReadyScreen(round, config) {
+      const readyText = document.getElementById('ready-text');
+      readyText.setAttribute('data-text', String(round).padStart(2, '0'));
+
+      const lenStr = config.lengths.length === 1
+        ? `${config.lengths[0]}-letter`
+        : `${config.lengths[0]}-${config.lengths[config.lengths.length - 1]} letter`;
+      document.getElementById('ready-hint').textContent =
+        `${config.words} words  ·  ${lenStr}`;
+
+      document.getElementById('ready-score').innerHTML =
+        `score <span>${String(state.score).padStart(2, '0')}</span>`;
+
+      const livesEl = document.getElementById('ready-lives');
+      livesEl.innerHTML = '';
+      for (let i = 0; i < state.lives; i++) {
+        const img = document.createElement('img');
+        img.src = './res/img/pixel-heart.png';
+        img.alt = '♥';
+        livesEl.appendChild(img);
+      }
+
+      document.getElementById('ready-taunt').textContent = '';
+      document.getElementById('ready-choices').innerHTML = '';
+    }
+
+    function typewriteEl(el, text) {
+      return new Promise(resolve => {
+        let i = 0;
+        function tick() {
+          if (i < text.length) {
+            el.textContent += text[i++];
+            setTimeout(tick, 30);
+          } else {
+            resolve();
+          }
+        }
+        tick();
+      });
+    }
+
+    const READY_CHOICES_POOL = [
+      { label: 'Have mercy', category: 'choice_mercy' },
+      { label: 'Can we slow down?', category: 'choice_slow' },
+      { label: 'Please be nice', category: 'choice_nice' },
+      { label: "I've got this", category: 'choice_ready' },
+      { label: "I'm scared", category: 'choice_scared' },
+      { label: "I quit", category: 'choice_quit' },
+      { label: "I'm not ready yet...", category: 'choice_not_ready' },
+      { label: 'Can I have a hint?', category: 'choice_hint' },
+      { label: 'What if I win?', category: 'choice_win' },
+      { label: "This isn't fair", category: 'choice_fair' },
+      { label: "I can handle it", category: 'choice_tough' },
+    ];
+
+    // Pre-renders choice buttons into the overlay (while still invisible)
+    // and returns a Promise that resolves when the player clicks one.
+    function prepareChoices() {
+      const pool = READY_CHOICES_POOL.slice();
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      const chosen = pool.slice(0, 2);
+
+      return new Promise(resolve => {
+        const container = document.getElementById('ready-choices');
+        container.innerHTML = '';
+        chosen.forEach((choice, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'ready-choice';
+          btn.textContent = choice.label;
+          btn.style.animationDelay = `${idx * 0.14}s`;
+          btn.addEventListener('click', () => {
+            container.innerHTML = '';
+            resolve(choice.category);
+          }, { once: true });
+          container.appendChild(btn);
+        });
+      });
+    }
+
     // ── Game flow ────────────────────────────────────────────────
     function startGame() {
+      clearTimeout(state.typingTimeout);
+      stopTypingTaunts();
       state.round = 1;
       state.lives = 5;
       state.score = 0;
@@ -607,16 +922,48 @@
       stopTimerBar();
       updateHUD();
 
-      document.getElementById('ready-text').textContent = `ROUND  ${String(state.round).padStart(2, '0')}`;
-      boiSay('intro');
-      await delay(800);
+      // Populate the overlay content while it's still invisible
+      populateReadyScreen(state.round, config);
+
+      // Let the succubus finish her intro line before anything appears
+      await charSay('intro');
       if (state.roundId !== myRoundId) return;
-      document.getElementById('ready-screen').classList.remove('hidden');
-      await delay(1600);
+      await delay(1000);
       if (state.roundId !== myRoundId) return;
 
-      document.getElementById('ready-screen').classList.add('hidden');
-      boiHide();
+      // Pre-render choices into the overlay while it's still invisible
+      const choicePromise = prepareChoices();
+
+      // Show overlay with entrance animation + CRT flash
+      const readyText = document.getElementById('ready-text');
+      readyText.classList.add('glitch');
+      showReadyScreen();
+
+      // Simultaneously spin the digits and typewrite a second taunt on the overlay
+      const tauntEl = document.getElementById('ready-taunt');
+      await Promise.all([
+        spinToDigits(state.round),
+        typewriteEl(tauntEl, pickMessage('intro')),
+      ]);
+      if (state.roundId !== myRoundId) return;
+
+      // Wait for the player to pick one of the already-visible choices
+      const chosenCategory = await choicePromise;
+      if (state.roundId !== myRoundId) return;
+
+      // Succubus responds to the choice
+      tauntEl.textContent = '';
+      await typewriteEl(tauntEl, pickMessage(chosenCategory));
+      if (state.roundId !== myRoundId) return;
+      await delay(900);
+      if (state.roundId !== myRoundId) return;
+
+      // Dismiss
+      readyText.classList.remove('glitch');
+      await hideReadyScreen();
+      if (state.roundId !== myRoundId) return;
+
+      charHide();
       await delay(300);
       if (state.roundId !== myRoundId) return;
 
@@ -626,7 +973,7 @@
     async function showWords(myRoundId, config) {
       state.phase = 'showing';
       updateHUD();
-      const bubble = document.getElementById('boi-bubble');
+      const bubble = document.getElementById('char-bubble');
 
       for (const word of state.currentWords) {
         if (state.roundId !== myRoundId) return;
@@ -652,7 +999,7 @@
       document.getElementById('word-input').focus();
       state.typingSeconds = config.typing;
       startTimerBar(config.typing);
-      boiShow('...');
+      charShow('...');
       scheduleBlink();
       resetIdleTimer();
 
@@ -679,8 +1026,8 @@
       const WRONG_COOLDOWN = 2000;
       if (correct || now - state.lastReactionTime >= WRONG_COOLDOWN) {
         state.lastReactionTime = now;
-        const pool = BOI_MESSAGES[correct ? 'correct' : 'wrong'];
-        boiTypewrite(pool[Math.floor(Math.random() * pool.length)]);
+        const pool = CHAR_MESSAGES[correct ? 'correct' : 'wrong'];
+        charTypewrite(pool[Math.floor(Math.random() * pool.length)]);
         scheduleTaunt();
       }
 
@@ -704,6 +1051,7 @@
     }
 
     async function evaluateRound(myRoundId) {
+      if (state.phase === 'eval') return;
       state.phase = 'eval';
       updateHUD();
       stopTimerBar();
@@ -716,9 +1064,9 @@
       updateHUD();
 
       if (missed.length === 0) {
-        boiSay('success');
+        charSay('success');
       } else {
-        boiSay('partial');
+        charSay('partial');
         const container = document.getElementById('submitted-words');
         missed.forEach(w => {
           const pill = document.createElement('span');
@@ -738,7 +1086,7 @@
 
       state.score++;
       state.round++;
-      boiHide();
+      charHide();
       document.getElementById('typing-area').classList.add('hidden');
       startRound();
     }
@@ -748,7 +1096,7 @@
       updateHUD();
       document.getElementById('typing-area').classList.add('hidden');
       stopTimerBar();
-      boiSay('gameover');
+      charSay('gameover');
       await delay(2000);
       document.getElementById('final-score').innerHTML =
         `rounds survived&nbsp;&nbsp;<strong>${state.score}</strong>`;
@@ -761,7 +1109,7 @@
 
     document.getElementById('restart-btn').addEventListener('click', function () {
       document.getElementById('gameover-screen').classList.add('hidden');
-      boiHide();
+      charHide();
       startGame();
     });
 
