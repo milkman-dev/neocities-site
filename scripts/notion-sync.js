@@ -60,7 +60,6 @@ function postHtml(title, dateStr, body) {
                 </div>
             </aside>
         </main>
-        <footer>milkman ©2025 — made with ❤️ on neocities</footer>
     </div>
 </body>
 </html>`;
@@ -159,7 +158,6 @@ async function main() {
         </div>
       </aside>
     </main>
-    <footer>milkman ©2025 — made with ❤️ on neocities</footer>
   </div>
 </body>
 </html>`;

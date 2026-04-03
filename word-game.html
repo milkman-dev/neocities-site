@@ -14,8 +14,8 @@
 
 <body>
 
+  <div class="scanlines"></div>
   <div id="scene">
-    <div class="scanlines"></div>
 
     <!-- Main row: char panel + right column -->
     <div id="main-row">
@@ -722,12 +722,13 @@
       const currentFraction = currentWidth / totalWidth;
       const newFraction = Math.max(0, currentFraction - 0.08);
       const remainingSeconds = newFraction * state.typingSeconds;
+      const elapsed = (1 - newFraction) * state.typingSeconds;
       bar.style.transition = 'none';
       bar.style.animation = 'none';
       bar.style.width = (newFraction * 100) + '%';
       bar.offsetWidth;
       bar.style.transition = `width ${remainingSeconds}s linear`;
-      bar.style.animation = `timer-color ${remainingSeconds}s linear forwards`;
+      bar.style.animation = `timer-color ${state.typingSeconds}s linear -${elapsed}s 1 normal forwards`;
       bar.style.width = '0%';
       clearTimeout(state.typingTimeout);
       const myRoundId = state.roundId;
